@@ -1,0 +1,8 @@
+erDiagram
+ ORGANIZATION ||--o{ LEGAL_ENTITY : controls
+ LEGAL_ENTITY ||--o{ PLANT : owns
+ PLANT ||--o{ DEPARTMENT : has
+ ORGANIZATION ||--o{ MEMBERSHIP : grants
+ MEMBERSHIP ||--o{ ROLE_ASSIGNMENT : has
+ ORGANIZATION ||--o{ MODULE_ENTITLEMENT : enables
+ ORGANIZATION ||--o{ AUDIT_EVENT : logs

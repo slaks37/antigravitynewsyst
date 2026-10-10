@@ -1,0 +1,20 @@
+sequenceDiagram
+ autonumber
+ participant PPIC
+ participant INV as Inventory
+ participant MES
+ participant HR as Workforce
+ participant QMS
+ participant COST as Costing
+ PPIC->>INV: Query available material by required date
+ INV-->>PPIC: availability + holds + reservations
+ PPIC->>MES: Release WO with BOM/routing version
+ MES->>HR: Query qualified assigned workers
+ HR-->>MES: assignment eligibility only
+ MES->>INV: Reserve / issue specific material lots
+ INV-->>MES: stock posting receipt
+ MES->>MES: Record operation output, reject, downtime
+ MES->>QMS: Inspect lot/serial
+ QMS-->>MES: disposition
+ MES->>COST: Post material/labor/output events
+ COST-->>PPIC: Actual vs standard cost and variance

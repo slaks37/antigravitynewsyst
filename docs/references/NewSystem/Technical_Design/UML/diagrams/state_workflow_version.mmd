@@ -1,0 +1,11 @@
+stateDiagram-v2
+ [*] --> Draft
+ Draft --> Simulated : syntax and policy checks
+ Simulated --> Review : validation passed
+ Review --> Published : authorized publish
+ Review --> Draft : revise
+ Published --> Deprecated : supersede
+ Published --> Suspended : abuse or incident
+ Suspended --> Published : authorized restore
+ Deprecated --> Archived
+ Archived --> [*]

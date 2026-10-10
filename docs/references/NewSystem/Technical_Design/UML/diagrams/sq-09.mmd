@@ -1,0 +1,16 @@
+sequenceDiagram
+ autonumber
+ participant MES
+ participant MT as Maintenance
+ participant INV as Inventory
+ participant PPIC
+ participant WF as Automate
+ MES->>MT: MachineDown event
+ MT->>INV: Request spare parts availability
+ INV-->>MT: stock / ETA
+ MT->>WF: Maintenance task and technician approval
+ WF-->>MT: authorized assignment
+ MT->>MT: Repair, inspection and safe test
+ MT->>MES: MachineReleased with evidence
+ MES->>PPIC: Machine capacity available
+ PPIC->>PPIC: Replan affected WO

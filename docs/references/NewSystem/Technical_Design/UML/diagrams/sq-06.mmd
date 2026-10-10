@@ -1,0 +1,19 @@
+sequenceDiagram
+ autonumber
+ participant EXT as Inbound Email
+ participant CON as Connect
+ participant SEC as Security Gate
+ participant AI as Document Copilot
+ participant PRO as Procurement/CRM
+ participant WF as Automate
+ EXT->>CON: Signed verified webhook
+ CON->>SEC: Sender, attachment, content validation
+ alt verified as untrusted data
+ SEC->>AI: Sanitized content reference, read-only
+ AI-->>PRO: Proposed change/draft, evidence link
+ PRO->>WF: Business owner approval
+ WF-->>PRO: approved action authorization
+ PRO->>PRO: Revalidate and execute command
+ else invalid or malicious
+ SEC-->>CON: Quarantine and audit
+ end

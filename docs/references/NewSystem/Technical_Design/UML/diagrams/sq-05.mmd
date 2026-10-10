@@ -1,0 +1,23 @@
+sequenceDiagram
+ autonumber
+ actor User
+ participant DOMAIN as Procurement/Accounting
+ participant DMS as Workspace
+ participant WF as Automate
+ participant CON as Connect
+ participant EXT as Email/Drive/OneDrive
+ User->>DOMAIN: Request official PO/invoice
+ DOMAIN->>DOMAIN: Validate and approve transaction
+ DOMAIN->>DMS: Render from approved snapshot
+ DMS->>WF: Request signature/approval if required
+ WF-->>DMS: approval result
+ DMS->>DMS: Finalize version + checksum
+ DMS->>CON: Send/export approved version
+ CON->>EXT: Provider API call (scoped OAuth)
+ alt success
+ EXT-->>CON: provider delivery/file ID
+ CON-->>DMS: Delivery status + audit
+ else failure
+ CON->>CON: retry same job ID / dead-letter
+ CON-->>User: Alert and manual retry action
+ end

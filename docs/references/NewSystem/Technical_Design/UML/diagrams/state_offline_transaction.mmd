@@ -1,0 +1,11 @@
+stateDiagram-v2
+ [*] --> LocalDraft
+ LocalDraft --> PendingSync : user submits
+ PendingSync --> ServerValidated : accepted and idempotent
+ PendingSync --> Conflict : stale version / invalid quantity
+ PendingSync --> RetryQueued : offline/provider error
+ RetryQueued --> PendingSync : retry with same key
+ Conflict --> Resolved : user correction
+ Resolved --> PendingSync
+ ServerValidated --> Posted : server posts
+ Posted --> [*]

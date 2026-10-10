@@ -1,0 +1,13 @@
+stateDiagram-v2
+ [*] --> Draft
+ Draft --> Validated : tax and invoice rules
+ Validated --> Approved : finance approval
+ Approved --> Posted : balanced AR/revenue journal
+ Posted --> PartiallyPaid : payment applied
+ Posted --> Paid : fully paid
+ PartiallyPaid --> Paid : remaining paid
+ Posted --> CreditNoteIssued : authorized correction
+ Paid --> Closed : reconciliation
+ CreditNoteIssued --> Closed : reconcile
+ Draft --> Void : before posting
+ Closed --> [*]

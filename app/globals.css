@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-navy: #0B1730;
+    --color-blue: #005BFF;
+    --color-cyan: #12C9F5;
+    --color-indigo: #6366F1;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-brand-blue selection:text-white;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-slate-900 tracking-tight;
+  }
+}
+
+/* Custom typography & badge utilities */
+.prose-newsystem {
+  @apply text-slate-700 leading-relaxed max-w-none;
+}
+
+.prose-newsystem h2 {
+  @apply text-2xl sm:text-3xl font-bold text-slate-900 mt-10 mb-4 tracking-tight border-b border-slate-100 pb-2;
+}
+
+.prose-newsystem h3 {
+  @apply text-xl sm:text-2xl font-semibold text-slate-900 mt-8 mb-3 tracking-tight;
+}
+
+.prose-newsystem p {
+  @apply mb-5 text-slate-600 leading-relaxed text-base sm:text-lg;
+}
+
+.prose-newsystem ul {
+  @apply list-disc list-inside mb-5 space-y-2 text-slate-600;
+}
+
+.prose-newsystem ol {
+  @apply list-decimal list-inside mb-5 space-y-2 text-slate-600;
+}
+
+.prose-newsystem blockquote {
+  @apply border-l-4 border-brand-blue bg-blue-50/50 p-4 rounded-r-lg italic text-slate-700 my-6;
+}
+
+.prose-newsystem code {
+  @apply bg-slate-100 text-brand-blue px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+.prose-newsystem hr {
+  @apply my-8 border-slate-200;
+}

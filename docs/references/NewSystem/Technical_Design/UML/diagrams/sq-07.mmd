@@ -1,0 +1,20 @@
+sequenceDiagram
+ autonumber
+ actor CEO
+ participant AG as AI Gateway
+ participant SEM as Governed Semantic Layer
+ participant ERP
+ participant HR as HRIS
+ participant ACC as Accounting
+ participant WF as Automate
+ CEO->>AG: Why did margin decline?
+ AG->>SEM: Authorized KPI query by scope
+ SEM->>ERP: Materials and production variance
+ SEM->>HR: Aggregated labor vs shifts
+ SEM->>ACC: GL/COGS reconciliation
+ SEM-->>AG: Evidence + freshness + limitations
+ AG-->>CEO: Diagnosis, scenarios and proposed actions
+ CEO->>WF: Approve selected proposal
+ WF->>ERP: Typed business command (policy checked)
+ ERP-->>WF: Committed / rejected result
+ WF-->>CEO: Actual result with audit ID

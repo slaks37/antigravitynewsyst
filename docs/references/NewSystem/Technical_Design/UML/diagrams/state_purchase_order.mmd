@@ -1,0 +1,15 @@
+stateDiagram-v2
+ [*] --> Draft
+ Draft --> Submitted : submit
+ Submitted --> Approved : approval per authority
+ Submitted --> Rejected : reject
+ Approved --> Issued : send official PO
+ Issued --> PartiallyReceived : partial GRN
+ Issued --> Received : full GRN
+ PartiallyReceived --> Received : final GRN
+ Issued --> AmendmentPending : vendor change
+ AmendmentPending --> Issued : approved version
+ Received --> Closed : match/settle
+ Draft --> Cancelled : cancel
+ Issued --> Cancelled : controlled cancellation
+ Closed --> [*]

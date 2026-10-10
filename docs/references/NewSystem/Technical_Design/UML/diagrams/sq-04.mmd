@@ -1,0 +1,16 @@
+sequenceDiagram
+ autonumber
+ participant HRIS
+ participant MES
+ participant PAY as Payroll
+ participant ACC as Accounting
+ participant WF as Automate
+ HRIS->>MES: Publish shifts and eligible workers
+ MES-->>HRIS: Report production labor time
+ HRIS->>WF: Validate attendance/overtime approvals
+ WF-->>HRIS: approvals or exceptions
+ HRIS->>PAY: Calculate controlled payroll batch
+ PAY->>ACC: Request payroll journal posting
+ ACC-->>PAY: Posted journal reference
+ MES->>ACC: Request direct labor allocation
+ ACC->>ACC: Reconcile payroll clearing vs WIP allocations

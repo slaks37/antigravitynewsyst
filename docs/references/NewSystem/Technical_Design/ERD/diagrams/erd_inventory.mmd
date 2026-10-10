@@ -1,0 +1,9 @@
+erDiagram
+ PLANT ||--o{ WAREHOUSE : contains
+ ITEM ||--o{ STOCK_LOT : identifiedBy
+ WAREHOUSE ||--o{ INVENTORY_MOVEMENT : posts
+ ITEM ||--o{ INVENTORY_MOVEMENT : moved
+ STOCK_LOT ||--o{ INVENTORY_MOVEMENT : linked
+ ITEM ||--o{ INVENTORY_RESERVATION : reserved
+ PURCHASE_ORDER ||--o{ GOODS_RECEIPT : fulfilledBy
+ GOODS_RECEIPT ||--o{ INVENTORY_MOVEMENT : triggers

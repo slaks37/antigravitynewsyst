@@ -1,0 +1,25 @@
+sequenceDiagram
+ autonumber
+ participant MRP
+ participant PRO as Procurement
+ participant WF as Automate
+ participant WH as Warehouse
+ participant QC as QMS
+ participant ACC as Accounting
+ MRP->>PRO: Draft purchase requisition
+ PRO->>WF: Request approval
+ WF-->>PRO: Approved by authorized manager
+ PRO->>PRO: Issue versioned purchase order
+ PRO->>WH: Expected receipt
+ WH->>QC: Incoming inspection request
+ QC-->>WH: Accept / hold / reject
+ WH->>ACC: GoodsReceived + PO reference
+ PRO->>ACC: SupplierInvoice received
+ ACC->>ACC: 3-way match quantity/price/tolerance
+ alt matched
+ ACC->>WF: Payment approval
+ WF-->>ACC: Authorized approval
+ ACC->>ACC: Post AP and payment
+ else mismatch
+ ACC-->>PRO: Exception resolution task
+ end

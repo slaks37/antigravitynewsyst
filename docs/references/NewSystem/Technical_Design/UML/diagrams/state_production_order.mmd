@@ -1,0 +1,16 @@
+stateDiagram-v2
+ [*] --> Draft
+ Draft --> Planned : BOM+capacity validated
+ Planned --> Released : material + authority check
+ Released --> InProgress : start operation
+ InProgress --> Paused : downtime or shortage
+ Paused --> InProgress : resolved
+ InProgress --> QualityReview : submit output
+ QualityReview --> InProgress : rework
+ QualityReview --> Completed : accepted output
+ Completed --> CostReconciliation : costs calculated
+ CostReconciliation --> Closed : sign-off
+ Draft --> Cancelled
+ Planned --> Cancelled
+ Released --> Cancelled : controlled closeout
+ Closed --> [*]

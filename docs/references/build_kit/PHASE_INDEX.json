@@ -1,0 +1,89 @@
+{
+  "project": "NewSystem",
+  "version": "1.0",
+  "phases": [
+    {
+      "number": "00",
+      "title": "Audit repository dan sumber dokumen"
+    },
+    {
+      "number": "01",
+      "title": "Monorepo, CI, design system dan navigasi"
+    },
+    {
+      "number": "02",
+      "title": "Multi-tenant Core, organisasi dan keamanan"
+    },
+    {
+      "number": "03",
+      "title": "Master data, shared contracts dan event foundation"
+    },
+    {
+      "number": "04",
+      "title": "CRM dan sales order sebagai pemicu demand"
+    },
+    {
+      "number": "05",
+      "title": "ERP procurement + inventory ledger"
+    },
+    {
+      "number": "06",
+      "title": "ERP PPIC, BOM/routing dan MRP"
+    },
+    {
+      "number": "07",
+      "title": "MES shop floor, labor capture dan QMS gate"
+    },
+    {
+      "number": "08",
+      "title": "Accounting core: double-entry, AR/AP dan HPP"
+    },
+    {
+      "number": "09",
+      "title": "GATE: satu siklus bisnis end-to-end benar-benar berfungsi"
+    },
+    {
+      "number": "10",
+      "title": "HRIS lengkap + attendance, shift dan payroll"
+    },
+    {
+      "number": "11",
+      "title": "Accounting lengkap, rekonsiliasi dan reporting"
+    },
+    {
+      "number": "12",
+      "title": "General Manufacturing templates, QMS lanjutan & Maintenance"
+    },
+    {
+      "number": "13",
+      "title": "Automation Studio & configurable workflows"
+    },
+    {
+      "number": "14",
+      "title": "NewSystem Workspace, file manager dan DMS hybrid"
+    },
+    {
+      "number": "15",
+      "title": "NewSystem Connect: email, Drive, OneDrive & APIs"
+    },
+    {
+      "number": "16",
+      "title": "Business Intelligence & semantic metrics layer"
+    },
+    {
+      "number": "17",
+      "title": "AI Module Copilots + Company Copilot"
+    },
+    {
+      "number": "18",
+      "title": "Tenant/Admin, portals, subscription dan website"
+    },
+    {
+      "number": "19",
+      "title": "Hardening, tiga pilot UAT dan release gate R1"
+    }
+  ],
+  "critical_gate": "09",
+  "full_suite_release_gate": "19",
+  "source": "NewSystem Drive and local reference copies"
+}

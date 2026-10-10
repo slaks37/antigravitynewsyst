@@ -1,0 +1,24 @@
+sequenceDiagram
+ autonumber
+ actor Customer
+ participant CRM
+ participant ERP as ERP/PPIC
+ participant MES
+ participant QMS
+ participant INV as Inventory
+ participant ACC as Accounting
+ participant BI
+ Customer->>CRM: Accept quotation
+ CRM->>ERP: Request ATP and production demand
+ ERP-->>CRM: Promise and available supply
+ CRM->>CRM: Confirm SalesOrder(vN)
+ ERP->>MES: Release WO(BOM/routing snapshots)
+ MES->>INV: Command IssueMaterials(idempotencyKey)
+ INV-->>MES: Posted movement
+ MES->>QMS: Submit output for QC
+ QMS-->>INV: Release accepted lot
+ INV-->>CRM: Ship confirmed goods
+ CRM->>ACC: Request invoice under billing policy
+ ACC-->>CRM: InvoicePosted / AR ref
+ ACC-->>BI: JournalPosted (outbox event)
+ BI-->>Customer: No direct output (authorized portal only)

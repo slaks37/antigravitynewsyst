@@ -1,0 +1,16 @@
+stateDiagram-v2
+ [*] --> Draft
+ Draft --> Submitted : submit
+ Submitted --> Approved : approve commercial terms
+ Submitted --> Draft : request changes
+ Approved --> Confirmed : customer confirms
+ Confirmed --> PartiallyFulfilled : ship partial
+ Confirmed --> Fulfilled : ship all
+ PartiallyFulfilled --> Fulfilled : ship remainder
+ Confirmed --> AmendmentPending : request revision
+ AmendmentPending --> Confirmed : revalidate/reserve
+ Draft --> Cancelled : cancel
+ Confirmed --> Cancelled : authorized closeout
+ Fulfilled --> Closed : invoice/reconcile
+ Cancelled --> [*]
+ Closed --> [*]

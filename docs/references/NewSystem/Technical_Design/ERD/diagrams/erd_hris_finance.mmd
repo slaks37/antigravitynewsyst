@@ -1,0 +1,11 @@
+erDiagram
+ LEGAL_ENTITY ||--o{ EMPLOYEE : employs
+ EMPLOYEE ||--o{ ATTENDANCE_ENTRY : attends
+ EMPLOYEE ||--o{ SHIFT_ASSIGNMENT : scheduled
+ EMPLOYEE ||--o{ PAYROLL_LINE : paidAs
+ PAYROLL_BATCH ||--o{ PAYROLL_LINE : contains
+ LEGAL_ENTITY ||--o{ JOURNAL_ENTRY : posts
+ JOURNAL_ENTRY ||--o{ JOURNAL_LINE : consistsOf
+ CHART_OF_ACCOUNTS ||--o{ JOURNAL_LINE : maps
+ PRODUCTION_ORDER ||--o{ COST_ENTRY : accumulates
+ INVENTORY_MOVEMENT ||--o{ INVENTORY_VALUATION : values

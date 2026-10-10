@@ -1,0 +1,10 @@
+erDiagram
+ CUSTOMER ||--o{ OPPORTUNITY : has
+ CUSTOMER ||--o{ QUOTATION : receives
+ QUOTATION ||--o{ QUOTATION_LINE : includes
+ CUSTOMER ||--o{ SALES_ORDER : places
+ SALES_ORDER ||--o{ SALES_ORDER_LINE : includes
+ ITEM ||--o{ SALES_ORDER_LINE : ordered
+ ITEM ||--o{ BOM_VERSION : definedBy
+ BOM_VERSION ||--o{ BOM_LINE : contains
+ ITEM ||--o{ ROUTING_VERSION : routedBy

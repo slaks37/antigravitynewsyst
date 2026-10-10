@@ -1,0 +1,12 @@
+stateDiagram-v2
+ [*] --> Draft
+ Draft --> InReview : submit
+ InReview --> RevisionRequired : changes requested
+ RevisionRequired --> Draft : edit draft
+ InReview --> Approved : maker-checker
+ Approved --> Finalized : render+hash immutable version
+ Finalized --> Distributed : approved destination
+ Distributed --> Archived : retention begins
+ Finalized --> Superseded : corrected business transaction
+ Superseded --> Archived
+ Archived --> [*]

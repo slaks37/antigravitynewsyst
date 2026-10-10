@@ -1,0 +1,20 @@
+sequenceDiagram
+ autonumber
+ actor Operator
+ participant PWA
+ participant API
+ participant MES
+ participant INV as Inventory
+ Operator->>PWA: Record 25 good, 2 reject offline
+ PWA->>PWA: Save local event + client_uuid
+ PWA->>API: Submit batch upon reconnection
+ API->>MES: Command with idempotency key and expected version
+ alt server validation passes
+ MES->>INV: Consume material if rule requires
+ INV-->>MES: ledger movement ID
+ MES-->>API: Committed authoritative status
+ API-->>PWA: Ack + server version
+ else conflict or insufficient stock
+ MES-->>API: Validation error and current version
+ API-->>PWA: Conflict for user resolution
+ end
