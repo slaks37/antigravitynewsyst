@@ -260,13 +260,13 @@ const NAV_SECTIONS: NavSection[] = [
             description: "Artikel mendalam mengenai ERP, MES, HPP, dan manajemen pabrik.",
           },
           {
-            name: "Panduan Proses Bisnis",
-            href: "/blog/category/manufacturing-operations",
+            name: "MES & Lantai Produksi",
+            href: "/blog/category/mes-shop-floor",
             description: "Standardisasi alur dari penerimaan pesanan hingga pengiriman.",
           },
           {
-            name: "Studi Kasus & Kalkulasi",
-            href: "/blog/category/finance-hpp-profitability",
+            name: "Kalkulasi HPP & Biaya",
+            href: "/blog/category/accounting-hpp",
             description: "Metodologi perhitungan HPP aktual dan pengendalian scrap.",
           },
         ],

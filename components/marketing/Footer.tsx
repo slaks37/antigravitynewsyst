@@ -149,30 +149,35 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Col 4: Resources & Company */}
+          {/* Col 4: Resources & Blog */}
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider text-white mb-4">
-              Perusahaan & Riset
+              Blog & Wawasan
             </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/blog" className="hover:text-white transition-colors">
-                  Blog & Wawasan
+                <Link href="/blog" className="hover:text-white transition-colors font-semibold text-brand-cyan">
+                  Pusat Wawasan Pabrik
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog/category/erp-core" className="hover:text-white transition-colors">
+                  ERP & Perencanaan
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog/category/mes-shop-floor" className="hover:text-white transition-colors">
+                  MES & Shop Floor
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog/category/accounting-hpp" className="hover:text-white transition-colors">
+                  Kalkulasi HPP Aktual
                 </Link>
               </li>
               <li>
                 <Link href="/design-partner" className="hover:text-white transition-colors">
                   Design Partner Program
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-white transition-colors">
-                  Tentang NewSystem
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-white transition-colors">
-                  Hubungi Kami
                 </Link>
               </li>
               <li>
@@ -183,11 +188,6 @@ export function Footer() {
               <li>
                 <Link href="/sitemap.xml" className="hover:text-white transition-colors">
                   Sitemap
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin" className="text-slate-500 hover:text-slate-300 transition-colors">
-                  CMS Portal (Admin)
                 </Link>
               </li>
             </ul>

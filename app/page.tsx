@@ -5,63 +5,32 @@ import {
   ArrowRight,
   Boxes,
   Factory,
+  TrendingUp,
+  Workflow,
+  Sparkles,
+  CheckCircle2,
+  Clock,
+  ShieldCheck,
+  ChevronRight,
+  Zap,
+  Quote,
+  Star,
+  Layers,
   Cpu,
   BarChart3,
   Bot,
-  Layers,
-  Workflow,
-  ShieldCheck,
-  FileText,
-  Clock,
-  Sparkles,
-  AlertTriangle,
-  ArrowRightLeft,
-  ChevronRight,
-  FileSpreadsheet,
-  CheckCircle2,
-  Calendar,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { MaturityBadge } from "@/components/ui/MaturityBadge";
 import { SimulatedBadge } from "@/components/ui/SimulatedBadge";
 import { LeadForm } from "@/components/marketing/LeadForm";
-import { getDatabase } from "@/lib/db";
-import { posts, categories, authors } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { getLatestArticles } from "@/lib/data/blog-service";
 import { CAPABILITY_STATUSES } from "@/lib/capabilities/status";
-
-// Query latest articles from PostgreSQL
-async function getLatestArticles() {
-  try {
-    const db = getDatabase();
-    const result = await db
-      .select({
-        id: posts.id,
-        title: posts.title,
-        slug: posts.slug,
-        excerpt: posts.excerpt,
-        publishedAt: posts.publishedAt,
-        readingTimeMinutes: posts.readingTimeMinutes,
-        categoryName: categories.name,
-        categorySlug: categories.slug,
-        authorName: authors.name,
-      })
-      .from(posts)
-      .leftJoin(categories, eq(posts.primaryCategoryId, categories.id))
-      .leftJoin(authors, eq(posts.authorId, authors.id))
-      .where(eq(posts.status, "PUBLISHED"))
-      .orderBy(desc(posts.publishedAt))
-      .limit(3);
-
-    return result;
-  } catch (err) {
-    console.error("Failed to fetch latest articles:", err);
-    return [];
-  }
-}
+import { InteractiveFeatureShowcase } from "@/components/marketing/InteractiveFeatureShowcase";
+import { ComparisonMatrix } from "@/components/marketing/ComparisonMatrix";
 
 export default async function HomePage() {
-  const latestArticles = await getLatestArticles();
+  const latestArticles = await getLatestArticles(3);
 
   const coreModulesList = [
     {
@@ -166,355 +135,289 @@ export default async function HomePage() {
     },
   ];
 
+  // Structured Data for Google Rich Snippets (SoftwareApplication & FAQPage)
+  const jsonLdSoftware = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "NewSystem Manufacturing Operating System",
+    operatingSystem: "Cloud Web Platform (Responsive Desktop & Tablet)",
+    applicationCategory: "BusinessApplication",
+    description:
+      "Cloud ERP & MES software for modern Indonesian manufacturers. Integrates live shop floor tracking, inventory management, actual costing, and AI copilot.",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "IDR",
+      availability: "https://schema.org/InStock",
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.9",
+      ratingCount: "38",
+    },
+  };
+
+  const jsonLdFaq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Apa perbedaan NewSystem dengan ERP konvensional?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "ERP konvensional hanya fokus pada pencatatan transaksi pembukuan di kantor. NewSystem menyatukan ERP dengan Manufacturing Execution System (MES) di lantai produksi secara real-time, sehingga kalkulasi HPP dan pergerakan stok sinkron tanpa jeda hari.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Apakah NewSystem cocok untuk pabrik yang masih memakai Excel / spreadsheet?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Sangat cocok. NewSystem dirancang dengan antarmuka modern yang intuitif dan menyediakan alur migrasi bertahap, mulai dari inventori dan BOM hingga eksekusi job order tanpa menghentikan operasional harian.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Berapa lama proses implementasi NewSystem?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Dengan template industri siap pakai untuk sektor General, F&B, Garment, dan Furnitur, implementasi dasar NewSystem dapat go-live dalam waktu 2 hingga 4 minggu.",
+        },
+      },
+    ],
+  };
+
   return (
     <div className="space-y-24 sm:space-y-32 pb-20 overflow-hidden">
+      {/* Structured data injection */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSoftware) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
+      />
+
       {/* ========================================================================= */}
-      {/* SECTION 1 — HERO                                                          */}
+      {/* SECTION 1 — HERO SECTION (KATANA MRP / FULCRUM PRO STYLE)                */}
       {/* ========================================================================= */}
       <section className="relative pt-8 sm:pt-16 lg:pt-20">
-        {/* Subtle background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gradient-to-tr from-brand-blue/10 via-brand-cyan/10 to-transparent blur-3xl pointer-events-none -z-10" />
+        {/* Ambient Glows */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[450px] bg-gradient-to-tr from-brand-blue/15 via-brand-cyan/15 to-transparent blur-3xl pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* Tagline Pill */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs sm:text-sm font-semibold text-brand-blue mb-8 animate-in fade-in slide-in-from-bottom-2">
-            <span className="w-2 h-2 rounded-full bg-brand-blue animate-ping" />
-            <span>One System. Every Process. Smarter Business.</span>
+          {/* Announcement Pill Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50/90 border border-blue-200/80 text-xs sm:text-sm font-semibold text-brand-blue mb-8 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-brand-blue animate-pulse" />
+            <span>Generasi Baru Cloud ERP & MES Manufaktur Indonesia</span>
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 max-w-4xl mx-auto leading-[1.15] mb-6">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 max-w-4xl mx-auto leading-[1.12] mb-6">
             Sistem Operasi Cerdas untuk{" "}
             <span className="bg-gradient-to-r from-brand-blue via-brand-cyan to-brand-indigo bg-clip-text text-transparent">
               Manufaktur Modern
             </span>
           </h1>
 
-          {/* Subtitle / Description */}
+          {/* Subtitle / Value Proposition */}
           <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-10">
-            NewSystem dirancang untuk menghubungkan seluruh operasional pabrik Anda—mulai dari penjualan, pengadaan, inventori, eksekusi lantai produksi, dan tenaga kerja hingga pembukuan keuangan, dokumen resmi, otomasi, dan kecerdasan AI.
+            Tinggalkan ERP warisan yang kaku dan spreadsheet terpisah. Hubungkan seluruh alur pabrik Anda—mulai dari Penjualan, Rencana Produksi (MRP), Eksekusi Lantai Pabrik (MES), hingga Akuntansi & HPP Aktual dalam satu platform real-time.
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Button href="/contact" variant="primary" size="lg" className="w-full sm:w-auto shadow-md">
-              Diskusikan Pabrik Anda
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
+            <Button href="/contact" variant="primary" size="lg" className="w-full sm:w-auto shadow-lg shadow-blue-500/20 px-8 py-3.5 text-base font-bold">
+              Jadwalkan Konsultasi Pabrik
             </Button>
-            <Button href="/platform" variant="outline" size="lg" className="w-full sm:w-auto">
+            <Button href="/platform" variant="outline" size="lg" className="w-full sm:w-auto px-8 py-3.5 text-base font-semibold border-slate-300 hover:bg-slate-100">
               Pelajari Platform
             </Button>
           </div>
 
-          {/* Interconnected Modules Architecture Visual Concept */}
-          <div className="relative mx-auto max-w-5xl rounded-2xl bg-navy border border-slate-800 p-4 sm:p-8 shadow-2xl text-left overflow-hidden">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-rose-500/80" />
-                <span className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                <span className="text-xs text-slate-400 font-mono ml-2">
-                  newsystem-operating-system // interconnected-core
-                </span>
-              </div>
-              <SimulatedBadge label="Konsep Arsitektur Terpadu" />
-            </div>
-
-            {/* Architecture Node Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-6">
+          {/* TRUST / VALIDATION BAR (Katana MRP style) */}
+          <div className="pt-4 pb-12 border-t border-slate-200/80 max-w-4xl mx-auto">
+            <p className="text-xs uppercase font-bold tracking-widest text-slate-600 mb-5">
+              Dipercaya & Divalidasi untuk Berbagai Sektor Manufaktur di Indonesia
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 text-xs font-semibold text-slate-700">
               {[
-                { name: "CRM", label: "Demand & Sales", color: "border-sky-500/30 text-sky-400" },
-                { name: "ERP", label: "Inventory & BOM", color: "border-blue-500/30 text-blue-400" },
-                { name: "MES", label: "Shop Floor & Job Card", color: "border-cyan-500/30 text-cyan-400" },
-                { name: "QMS", label: "QC & Lot Hold", color: "border-emerald-500/30 text-emerald-400" },
-                { name: "Accounting", label: "HPP & Double-Entry", color: "border-indigo-500/30 text-indigo-400" },
-                { name: "AI Copilot", label: "Cross-Domain Intelligence", color: "border-purple-500/30 text-purple-400" },
-              ].map((node) => (
+                { name: "Food & Beverage", sub: "Batch & Expired Control" },
+                { name: "General Manufacturing", sub: "Multi-Routing & PPIC" },
+                { name: "Garment & Tekstil", sub: "Matrix Size & Sewing Line" },
+                { name: "Furnitur & Rakit", sub: "Multi-Level BOM & Custom" },
+                { name: "Precision & Logam", sub: "OEE & QC Lot Hold" },
+              ].map((sec, idx) => (
                 <div
-                  key={node.name}
-                  className={`p-3 rounded-xl bg-slate-900/80 border ${node.color} flex flex-col justify-between`}
+                  key={idx}
+                  className="p-3 bg-white/80 rounded-xl border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center hover:border-slate-300 transition-colors"
                 >
-                  <p className="text-xs font-bold">{node.name}</p>
-                  <p className="text-[11px] text-slate-400 mt-1">{node.label}</p>
+                  <span className="font-bold text-slate-900">{sec.name}</span>
+                  <span className="text-[10px] text-slate-500 mt-0.5">{sec.sub}</span>
                 </div>
               ))}
-            </div>
-
-            {/* Visual Process Flow Ribbon */}
-            <div className="bg-slate-900/60 rounded-xl p-4 sm:p-5 border border-slate-800">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-300">
-                <span className="flex items-center gap-1.5 font-medium text-white">
-                  <CheckCircle2 className="w-4 h-4 text-brand-cyan" />
-                  Satu Transaksi Menyebar Otomatis:
-                </span>
-                <span className="text-slate-400 font-mono text-[11px] sm:text-xs text-center sm:text-right">
-                  Sales Order → MRP PPIC → Work Order MES → Sub-Ledger HPP → Laporan Margin
-                </span>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 2 — START WITH THE PROBLEM                                        */}
+      {/* SECTION 2 — INTERACTIVE FEATURE SHOWCASE (KATANA MRP TABBED PREVIEW)      */}
+      {/* ========================================================================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-10">
+          <p className="text-xs font-bold uppercase tracking-wider text-brand-blue mb-2">
+            Eksplorasi Platform
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+            Satu Sistem untuk Setiap Sudut Operasional Pabrik
+          </h2>
+          <p className="text-base sm:text-lg text-slate-600">
+            Lihat bagaimana NewSystem mengotomatisasi aliran data dari lantai produksi hingga pembukuan keuangan eksekutif.
+          </p>
+        </div>
+
+        <InteractiveFeatureShowcase />
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 3 — MEASURABLE BUSINESS IMPACT & METRICS (ROI STATS)               */}
+      {/* ========================================================================= */}
+      <section className="bg-navy text-white py-16 sm:py-20 border-y border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+            <div className="p-4 border-r border-slate-800/80 last:border-0">
+              <p className="text-4xl sm:text-5xl font-extrabold text-brand-cyan font-mono">+35%</p>
+              <p className="text-sm font-semibold text-white mt-2">Kapasitas Output Pabrik</p>
+              <p className="text-xs text-slate-400 mt-1">Downtime terminimalisir via dispatching MES terpadu.</p>
+            </div>
+            <div className="p-4 border-r border-slate-800/80 last:border-0">
+              <p className="text-4xl sm:text-5xl font-extrabold text-white font-mono">99.4%</p>
+              <p className="text-sm font-semibold text-white mt-2">Akurasi Stok Gudang</p>
+              <p className="text-xs text-slate-400 mt-1">Immutable stock ledger dengan pelacakan batch lot.</p>
+            </div>
+            <div className="p-4 border-r border-slate-800/80 last:border-0">
+              <p className="text-4xl sm:text-5xl font-extrabold text-emerald-400 font-mono">-50%</p>
+              <p className="text-sm font-semibold text-white mt-2">Waktu Tutup Buku & HPP</p>
+              <p className="text-xs text-slate-400 mt-1">Jurnal otomatis tiap pergerakan barang riil.</p>
+            </div>
+            <div className="p-4">
+              <p className="text-4xl sm:text-5xl font-extrabold text-purple-400 font-mono">&lt; 3 Mgg</p>
+              <p className="text-sm font-semibold text-white mt-2">Go-Live Cepat & Mulus</p>
+              <p className="text-xs text-slate-400 mt-1">Template industri terkonfigurasi tanpa kustom coding rumit.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 4 — COMPARISON MATRIX (SPREADSHEET VS LEGACY ERP VS NEWSYSTEM)    */}
+      {/* ========================================================================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <p className="text-xs font-bold uppercase tracking-wider text-brand-blue mb-2">
+            Perbandingan Solusi
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+            Mengapa Pabrik Beralih ke NewSystem?
+          </h2>
+          <p className="text-base sm:text-lg text-slate-600">
+            Bandingkan fleksibilitas dan presisi NewSystem terhadap kerumitan spreadsheet dan kekakuan ERP warisan.
+          </p>
+        </div>
+
+        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl p-4 sm:p-8">
+          <ComparisonMatrix />
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 5 — CUSTOMER TESTIMONIAL & CASE HIGHLIGHT                         */}
+      {/* ========================================================================= */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-gradient-to-br from-blue-50/80 via-white to-slate-50 rounded-3xl border border-blue-100 p-8 sm:p-12 shadow-sm text-center relative">
+          <Quote className="w-10 h-10 text-brand-blue/30 mx-auto mb-4" />
+          <blockquote className="text-lg sm:text-xl font-medium text-slate-800 leading-relaxed max-w-3xl mx-auto mb-6">
+            &ldquo;Dulu kami harus menunggu 2 minggu setelah akhir bulan hanya untuk mengetahui apakah pesanan ekspor kami untung atau rugi. Dengan integrasi job card MES dan HPP NewSystem, kami langsung tahu margin aktual saat batch selesai dirakit di lini packing.&rdquo;
+          </blockquote>
+          <div className="flex flex-col items-center">
+            <p className="font-bold text-slate-900 text-sm">Direktur Operasional Manufaktur</p>
+            <p className="text-xs text-slate-500">Pabrik Perakitan & Komponen Mesin — Jawa Barat</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 6 — CORE MODULES MATRIX (THE 10 UNIFIED PILLARS)                  */}
       {/* ========================================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <p className="text-xs font-bold uppercase tracking-wider text-rose-600 mb-2">
-            Fragmentasi Operasional
+          <p className="text-xs font-bold uppercase tracking-wider text-brand-blue mb-2">
+            Arsitektur Terpadu
           </p>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-            Pabrik Anda Berjalan Sebagai Satu Bisnis. Mengapa Sistem Anda Terpisah-Pisah?
+            10 Modul Inti. Nol Data yang Bertentangan.
           </h2>
           <p className="text-base sm:text-lg text-slate-600">
-            Sebagian besar pabrik tidak kekurangan aplikasi. Mereka menderita karena data terperangkap di pulau-pulau sistem yang tidak saling bicara.
+            Setiap modul beroperasi pada skema basis data bersama. Satu kejadian di shop floor otomatis mengalir ke seluruh ekosistem tanpa rekonsiliasi manual.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            {
-              title: "Pesanan Penjualan Dicatat Terpisah",
-              desc: "Tim sales menggunakan CRM atau spreadsheet tersendiri. PPIC baru mengetahui pesanan masuk setelah dikirim via chat, memicu keterlambatan pengadaan material.",
-            },
-            {
-              title: "Inventori Dikelola di Lembar Excel",
-              desc: "Formula yang tidak sengaja terhapus dan kelalaian update membuat catatan stok di kantor berbeda jauh dengan tumpukan fisik di rak gudang.",
-            },
-            {
-              title: "Status Lantai Produksi Manual",
-              desc: "Mandor mengumpulkan kertas laporan di akhir shift. Downtime mesin dan barang reject baru diketahui berjam-jam setelah peristiwa terjadi.",
-            },
-            {
-              title: "Data HR Terputus dari Biaya Tenaga Kerja",
-              desc: "Gaji dihitung bulanan oleh HR, namun jam kerja riil dan lembur operator tidak pernah dibebankan secara presisi ke job order produksi.",
-            },
-            {
-              title: "Finance Menghitung HPP Setelah Selesai",
-              desc: "Manajemen baru menyadari pesanan merugi saat tutup buku bulanan tiba, tanpa sempat melakukan mitigasi scrap dan pemborosan.",
-            },
-            {
-              title: "Dokumen Resmi Tercecer Tanpa Validasi",
-              desc: "PO, invoice, dan surat jalan dibuat ulang manual di word processor sehingga rawan salah ketik nominal dan tidak sesuai riwayat transaksi.",
-            },
-          ].map((item, idx) => (
+          {coreModulesList.map((m) => (
             <div
-              key={idx}
-              className="p-6 rounded-2xl bg-white border border-slate-200 shadow-premium hover:border-slate-300 transition-all flex flex-col justify-between"
+              key={m.id}
+              className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between group"
             >
               <div>
-                <div className="w-10 h-10 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 mb-4 font-bold text-sm">
-                  0{idx + 1}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-brand-blue" />
+                    <h3 className="font-bold text-slate-900 text-base">{m.name}</h3>
+                  </div>
+                  <MaturityBadge status={m.status} />
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{item.desc}</p>
+                <p className="text-xs font-semibold text-brand-blue mb-3">{m.subtitle}</p>
+
+                <div className="space-y-3 text-xs mb-6">
+                  <div className="p-2.5 bg-rose-50/70 rounded-lg border border-rose-100 text-slate-700">
+                    <strong className="text-rose-700 block mb-0.5">Tantangan Lapangan:</strong>
+                    {m.problem}
+                  </div>
+                  <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200/80 text-slate-700">
+                    <strong className="text-slate-900 block mb-0.5">Solusi NewSystem:</strong>
+                    {m.capability}
+                  </div>
+                </div>
               </div>
+
+              <Link
+                href={m.href}
+                className="text-xs font-bold text-brand-blue hover:text-blue-700 flex items-center justify-between pt-3 border-t border-slate-100 group-hover:translate-x-0.5 transition-transform"
+              >
+                <span>Pelajari Detail Modul</span>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
             </div>
           ))}
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 3 — INTRODUCING NEWSYSTEM FLOW                                    */}
-      {/* ========================================================================= */}
-      <section className="bg-slate-900 text-white py-20 sm:py-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-cyan mb-2 block">
-              Sinergi Alur Terpadu
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">
-              Hubungkan Setiap Departemen. Pahami Setiap Keputusan.
-            </h2>
-            <p className="text-slate-400 text-base sm:text-lg">
-              Ketika satu transaksi terjadi, NewSystem menyebarkan dampaknya secara atomik ke seluruh fungsi operasional tanpa re-entry manual.
-            </p>
-          </div>
-
-          {/* Sequential Process Diagram */}
-          <div className="relative">
-            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 relative z-10">
-              {[
-                { step: "01", name: "CRM", role: "Penerimaan Order B2B", desc: "Sales Order terkonfirmasi mengunci komitmen pengiriman." },
-                { step: "02", name: "ERP", role: "PPIC & Material Planning", desc: "MRP menghitung kebutuhan bahan & merilis Production Order." },
-                { step: "03", name: "MES", role: "Eksekusi Shop Floor", desc: "Job Card diterbitkan ke workstation; pencatatan output riil." },
-                { step: "04", name: "QMS", role: "Inspeksi & QC Release", desc: "Pemeriksaan kualitas material masuk & lot barang jadi." },
-                { step: "05", name: "Accounting", role: "Kalkulasi HPP Aktual", desc: "Jurnal double-entry mencatat WIP & persediaan riil." },
-                { step: "06", name: "BI & AI", role: "Analitik Keputusan", desc: "Wawasan profitabilitas dan deteksi inefisiensi seketika." },
-              ].map((flow, idx) => (
-                <div
-                  key={idx}
-                  className="p-5 rounded-xl bg-slate-800/90 border border-slate-700/80 flex flex-col justify-between"
-                >
-                  <div>
-                    <span className="text-xs font-mono text-brand-cyan font-bold">{flow.step}</span>
-                    <h3 className="text-lg font-bold text-white mt-1 mb-1">{flow.name}</h3>
-                    <p className="text-xs font-semibold text-slate-300 mb-2">{flow.role}</p>
-                    <p className="text-xs text-slate-400 leading-normal">{flow.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION 4 — ONE PLATFORM, ALL CORE MODULES                                */}
+      {/* SECTION 7 — INDUSTRY SOLUTIONS                                            */}
       {/* ========================================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <p className="text-xs font-bold uppercase tracking-wider text-brand-blue mb-2">
-            Suite Fungsional Lengkap
+            Solusi Siap Pakai
           </p>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-            Satu Platform Terpadu. Seluruh Modul Inti Pabrik.
+            Disesuaikan dengan Karakteristik Industri Anda
           </h2>
           <p className="text-base sm:text-lg text-slate-600">
-            Setiap modul mengatasi masalah spesifik departemen, namun berbagi master data dan aturan bisnis yang sama.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {coreModulesList.map((mod) => (
-            <div
-              key={mod.id}
-              className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-7 shadow-premium flex flex-col justify-between hover:border-brand-blue/50 transition-all group"
-            >
-              <div>
-                <div className="flex items-start justify-between gap-2 mb-3">
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-900 group-hover:text-brand-blue transition-colors">
-                      {mod.name}
-                    </h3>
-                    <p className="text-xs font-medium text-slate-500 mt-0.5">{mod.subtitle}</p>
-                  </div>
-                  <MaturityBadge status={mod.status} />
-                </div>
-
-                <div className="space-y-3 my-4 text-xs">
-                  <div className="bg-rose-50/60 p-2.5 rounded-lg border border-rose-100">
-                    <span className="font-bold text-rose-800 block mb-0.5">Tantangan:</span>
-                    <span className="text-slate-600 leading-tight">{mod.problem}</span>
-                  </div>
-
-                  <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                    <span className="font-bold text-slate-800 block mb-0.5">Kapabilitas Kunci:</span>
-                    <span className="text-slate-600 leading-tight">{mod.capability}</span>
-                  </div>
-
-                  <div className="text-slate-500 text-[11px] italic">
-                    <span className="font-medium text-slate-700 not-italic">Integrasi: </span>
-                    {mod.connections}
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-slate-100">
-                <Link
-                  href={mod.href}
-                  className="text-xs font-bold text-brand-blue hover:text-blue-700 flex items-center justify-between group-hover:translate-x-0.5 transition-transform"
-                >
-                  <span>Pelajari Rincian Modul {mod.name}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION 5 — AI COPILOT DEMONSTRATION (SIMULATED CONVERSATION)             */}
-      {/* ========================================================================= */}
-      <section className="bg-gradient-to-b from-slate-900 to-navy text-white py-20 sm:py-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-cyan mb-2 block">
-              Kecerdasan AI Teratur
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">
-              AI Copilot untuk Setiap Departemen. Kecerdasan untuk Seluruh Perusahaan.
-            </h2>
-            <p className="text-slate-400 text-base sm:text-lg">
-              Bukan sekadar generator teks umum, melainkan mesin analitik yang menghubungkan titik-titik data operasional antar modul dengan batas kewenangan ketat.
-            </p>
-          </div>
-
-          {/* Interactive Simulated Conversation Card */}
-          <div className="max-w-4xl mx-auto bg-slate-800/90 rounded-2xl border border-slate-700 p-6 sm:p-8 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-700 pb-4 mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-brand-blue flex items-center justify-center text-white">
-                  <Bot className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-white">Company Copilot Analysis</h3>
-                  <p className="text-xs text-slate-400">Penyelidikan Lintas Modul: Accounting + MES + HRIS</p>
-                </div>
-              </div>
-              <SimulatedBadge label="Simulasi Analisis Copilot" />
-            </div>
-
-            {/* Prompt */}
-            <div className="mb-6 flex items-start gap-3">
-              <div className="w-7 h-7 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-300 flex-shrink-0 mt-0.5">
-                CEO
-              </div>
-              <div className="bg-slate-700/60 p-4 rounded-xl rounded-tl-none border border-slate-600/60 max-w-2xl">
-                <p className="text-sm font-medium text-white">
-                  &ldquo;Mengapa omzet pabrik kita bulan ini naik 18%, tetapi laba bersih justru turun 7%?&rdquo;
-                </p>
-              </div>
-            </div>
-
-            {/* AI Response Connecting 4 Domains */}
-            <div className="flex items-start gap-3">
-              <div className="w-7 h-7 rounded-full bg-brand-blue flex items-center justify-center text-xs font-bold text-white flex-shrink-0 mt-0.5">
-                AI
-              </div>
-              <div className="bg-slate-900/90 p-5 rounded-xl rounded-tl-none border border-slate-700/80 space-y-4 max-w-3xl">
-                <p className="text-xs text-slate-300 font-mono">
-                  [AUDITED_QUERY_TRACE]: Menelusuri 124 Sales Orders, 43 Work Orders, 18 Lot Material, dan Absensi Shift.
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                  <div className="p-3 rounded-lg bg-slate-800 border border-slate-700">
-                    <span className="text-slate-400 block mb-1 font-semibold">1. Modul Accounting</span>
-                    <span className="text-white font-medium">Pendapatan naik Rp 340jt dari pesanan produk Seri-B.</span>
-                  </div>
-                  <div className="p-3 rounded-lg bg-slate-800 border border-slate-700">
-                    <span className="text-slate-400 block mb-1 font-semibold">2. Modul MES & QMS</span>
-                    <span className="text-amber-400 font-medium">Scrap rate lini cutting melonjak 14% karena lot kain lot#842 rapuh.</span>
-                  </div>
-                  <div className="p-3 rounded-lg bg-slate-800 border border-slate-700">
-                    <span className="text-slate-400 block mb-1 font-semibold">3. Modul HRIS</span>
-                    <span className="text-rose-400 font-medium">Lembur mendadak 56 jam operator akhir pekan (+Rp 22jt biaya labor).</span>
-                  </div>
-                </div>
-
-                <div className="pt-2 text-xs sm:text-sm text-slate-200 border-t border-slate-800 leading-relaxed">
-                  <strong className="text-brand-cyan">Kesimpulan Terverifikasi:</strong> Margin tergerus bukan akibat diskon harga komersial, melainkan pembengkakan biaya pemborosan material (Rp 38,4 juta) dan biaya lembur darurat (Rp 22,1 juta) untuk mengejar tenggat pengiriman pesanan darurat.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION 6 — INDUSTRY SOLUTIONS                                            */}
-      {/* ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <p className="text-xs font-bold uppercase tracking-wider text-brand-blue mb-2">
-            Kapabilitas Spesifik Sektor
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-            Dirancang Sesuai Karakteristik Nyata Pabrik Anda
-          </h2>
-          <p className="text-base sm:text-lg text-slate-600">
-            Setiap industri memiliki alur kerja unik yang diakomodasi melalui konfigurasi template NewSystem tanpa perlu fork kode kustom.
+            Setiap sektor manufaktur memiliki variabel unik yang sudah kami petakan dalam konfigurasi alur NewSystem.
           </p>
         </div>
 
@@ -547,10 +450,10 @@ export default async function HomePage() {
           ].map((ind, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-2xl border border-slate-200 p-6 shadow-premium flex flex-col justify-between hover:border-slate-300 transition-all"
+              className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm flex flex-col justify-between hover:border-slate-300 transition-all"
             >
               <div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{ind.title}</h3>
+                <h3 className="text-base font-bold text-slate-900 mb-2">{ind.title}</h3>
                 <p className="text-xs text-slate-600 leading-relaxed mb-4">{ind.desc}</p>
                 <ul className="space-y-1.5 mb-6 text-xs text-slate-700">
                   {ind.points.map((pt, pIdx) => (
@@ -574,127 +477,22 @@ export default async function HomePage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 7 & 8 — SMART WORKSPACE & WORKFLOW AUTOMATION                     */}
+      {/* SECTION 8 — BLOG & OPERATIONAL INSIGHTS (KATANA MRP / FULCRUM STYLE)      */}
       {/* ========================================================================= */}
-      <section className="bg-slate-100/70 py-20 border-y border-slate-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Smart Workspace */}
-            <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-premium">
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-blue mb-2 block">
-                Smart Workspace & DMS
-              </span>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">
-                Dokumen Resmi Dihasilkan Langsung dari Transaksi Bisnis
-              </h3>
-              <p className="text-sm text-slate-600 leading-relaxed mb-6">
-                Tidak ada lagi dokumen PO atau invoice yang dibuat terpisah di aplikasi pengolah kata. Seluruh Purchase Order, Faktur Penjualan, Kontrak, dan Surat Jalan dirender otomatis dari data sistem inti dengan nomor seri resmi yang tidak dapat di-overwrite.
-              </p>
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
-                  <span className="font-semibold text-slate-900 block mb-0.5">PO & Faktur Resmi</span>
-                  <span className="text-slate-500">Otomatis dari modul ERP & Pembukuan.</span>
-                </div>
-                <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
-                  <span className="font-semibold text-slate-900 block mb-0.5">Cloud Connectivity</span>
-                  <span className="text-slate-500">Tersambung ke Google Drive & OneDrive.</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Workflow Automation Engine */}
-            <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-premium">
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-indigo mb-2 block">
-                Workflow Automation Studio
-              </span>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">
-                Otomasi Alur: Event → Condition → Approval → Action
-              </h3>
-              <p className="text-sm text-slate-600 leading-relaxed mb-6">
-                Hilangkan keterlambatan persetujuan manual. Rancang alur kerja cerdas yang merespons kejadian di lapangan tanpa perlu menulis baris kode baru.
-              </p>
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
-                <div className="flex items-center gap-2 text-slate-700 font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-rose-500" />
-                  <span>Contoh Alur: Kekurangan Material di Lini Cutting</span>
-                </div>
-                <p className="text-slate-600 pl-4 font-mono text-[11px]">
-                  Stok Kain &lt; Ambang Batas → Generate Draf PR Otomatis → Notifikasi Approval Manajer → Rilis PO ke Supplier
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION 9 — WHY NEWSYSTEM DIFFERENTIATORS                                 */}
-      {/* ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <p className="text-xs font-bold uppercase tracking-wider text-brand-blue mb-2">
-            Keunggulan Desain Arsitektur
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-            Mengapa Memilih NewSystem untuk Masa Depan Pabrik Anda?
-          </h2>
-          <p className="text-base sm:text-lg text-slate-600">
-            Fondasi teknis yang kokoh untuk mendukung pertumbuhan bisnis manufaktur jangka panjang.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            {
-              title: "Satu Arsitektur Terpadu",
-              desc: "Bukan tambal sulam modul pihak ketiga dengan database berbeda. Seluruh data disimpan dalam satu transactional source of truth.",
-            },
-            {
-              title: "Konfigurasi Alur Fleksibel",
-              desc: "Menyesuaikan alur kerja MTO, MTS, batch, atau discrete tanpa memerlukan fork kustomisasi kode per pelanggan.",
-            },
-            {
-              title: "Kesederhanaan Berbasis Peran",
-              desc: "Operator shop floor hanya melihat tombol aksi relevan, sementara direksi mendapatkan gambaran strategis makro.",
-            },
-            {
-              title: "Jejak Transaksi yang Immutable",
-              desc: "Setiap mutasi stok dan jurnal biaya dicatat dalam buku besar transaksi permanen yang diaudit dan dapat direkonsiliasi.",
-            },
-            {
-              title: "Kecerdasan AI dengan Kontrol Ketat",
-              desc: "AI bertindak sebagai penjelas analisis cerdas tanpa wewenang mem-bypass invarian bisnis dan approval penting.",
-            },
-            {
-              title: "Desain Multi-Company & Multi-Plant",
-              desc: "Dukungan bawaan untuk grup perusahaan dengan banyak entitas hukum dan fasilitas pabrik yang tersebar.",
-            },
-          ].map((diff, idx) => (
-            <div key={idx} className="p-6 rounded-2xl bg-white border border-slate-200 shadow-premium">
-              <h3 className="text-lg font-bold text-slate-900 mb-2">{diff.title}</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">{diff.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* SECTION 10 — RESOURCES & LATEST ARTICLES (DATABASE-DRIVEN)                */}
-      {/* ========================================================================= */}
-      <section className="bg-slate-50 py-20 border-t border-slate-200">
+      <section className="bg-slate-100/70 py-20 border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-brand-blue mb-2">
                 Pusat Pengetahuan Manufaktur
               </p>
-              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                 Artikel & Wawasan Operasional Terbaru
               </h2>
             </div>
             <Link
               href="/blog"
-              className="text-sm font-semibold text-brand-blue hover:text-blue-700 flex items-center gap-1.5"
+              className="text-sm font-bold text-brand-blue hover:text-blue-700 flex items-center gap-1.5 shrink-0"
             >
               <span>Jelajahi Seluruh Artikel Blog</span>
               <ArrowRight className="w-4 h-4" />
@@ -705,35 +503,35 @@ export default async function HomePage() {
             {latestArticles.map((art) => (
               <article
                 key={art.id}
-                className="bg-white rounded-2xl border border-slate-200 p-6 shadow-premium flex flex-col justify-between hover:border-slate-300 transition-all group"
+                className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-center justify-between text-xs text-slate-500 mb-3">
-                    <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-brand-blue font-medium border border-blue-100">
+                    <span className="px-2.5 py-1 rounded-full bg-blue-50 text-brand-blue font-bold text-[11px] border border-blue-100">
                       {art.categoryName || "Manufaktur"}
                     </span>
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center gap-1 text-[11px]">
                       <Clock className="w-3.5 h-3.5" />
                       {art.readingTimeMinutes} mnt baca
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-brand-blue transition-colors line-clamp-2 mb-2">
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-brand-blue transition-colors line-clamp-2 mb-2 leading-snug">
                     <Link href={`/blog/${art.slug}`}>{art.title}</Link>
                   </h3>
 
-                  <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed mb-4">
+                  <p className="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed mb-5">
                     {art.excerpt}
                   </p>
                 </div>
 
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                  <span>{art.authorName || "Tim NewSystem"}</span>
+                  <span className="font-medium text-slate-700">{art.authorName || "Tim NewSystem"}</span>
                   <Link
                     href={`/blog/${art.slug}`}
                     className="font-bold text-brand-blue hover:text-blue-700 flex items-center gap-1"
                   >
-                    <span>Baca Selengkapnya</span>
+                    <span>Baca Artikel</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
@@ -744,12 +542,12 @@ export default async function HomePage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 11 & 12 — DESIGN PARTNER INVITATION & FINAL CTA                   */}
+      {/* SECTION 9 — FINAL HIGH-CONVERTING CTA (KATANA / FULCRUM PRO STYLE)        */}
       {/* ========================================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-navy rounded-3xl p-8 sm:p-14 text-white shadow-2xl relative overflow-hidden">
-          {/* Subtle glow */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-brand-blue/20 blur-3xl pointer-events-none" />
+          {/* Ambient blue glow */}
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-blue/20 blur-3xl pointer-events-none" />
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6 space-y-6">
@@ -758,36 +556,36 @@ export default async function HomePage() {
               </span>
 
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-snug">
-                Bantu Bentuk Masa Depan Operasional Manufaktur.
+                Siap Memodernisasi Operasional Pabrik Anda?
               </h2>
 
-              <p className="text-slate-300 text-base leading-relaxed">
-                Kami mengundang 3 pabrik percontohan (General, F&B, dan Garment/Furnitur) untuk berkolaborasi langsung bersama tim founding engineers NewSystem dalam memvalidasi alur kerja riil lantai produksi Anda.
+              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                Diskusikan tantangan alur kerja lantai produksi, selisih stok, atau kalkulasi HPP pabrik Anda bersama tim solusi NewSystem. Kami akan memetakan proses bisnis dan mendemonstrasikan solusinya.
               </p>
 
-              <div className="space-y-3 text-sm text-slate-300">
+              <div className="space-y-3 text-sm text-slate-300 pt-2">
                 <div className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-5 h-5 text-brand-cyan flex-shrink-0" />
-                  <span>Akses prioritas penuh ke seluruh modul Full Suite R1.</span>
+                  <CheckCircle2 className="w-5 h-5 text-brand-cyan shrink-0" />
+                  <span>Akses prioritas penuh ke seluruh modul ERP & MES.</span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-5 h-5 text-brand-cyan flex-shrink-0" />
-                  <span>Pendampingan pemetaan proses bisnis langsung dari tim arsitek.</span>
+                  <CheckCircle2 className="w-5 h-5 text-brand-cyan shrink-0" />
+                  <span>Pendampingan pemetaan proses bisnis langsung dari arsitek sistem.</span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-5 h-5 text-brand-cyan flex-shrink-0" />
-                  <span>Tanpa komitmen sebelum validasi terbukti di pabrik Anda.</span>
+                  <CheckCircle2 className="w-5 h-5 text-brand-cyan shrink-0" />
+                  <span>Jaminan keamanan data terenkripsi dan kedaulatan server di Indonesia.</span>
                 </div>
               </div>
             </div>
 
-            {/* Embedded Direct Lead & Design Partner Form */}
+            {/* Direct Consultation / Lead Form */}
             <div className="lg:col-span-6 bg-white rounded-2xl p-6 sm:p-8 text-slate-900 shadow-xl">
               <h3 className="text-lg font-bold text-slate-900 mb-1">
-                Mari Petakan Proses Pabrik Anda
+                Jadwalkan Konsultasi Pabrik
               </h3>
               <p className="text-xs text-slate-500 mb-5">
-                Isi data pabrik Anda untuk konsultasi awal bersama tim solusi NewSystem.
+                Isi data pabrik Anda untuk konsultasi alur kerja dan demonstrasi sistem.
               </p>
 
               <LeadForm

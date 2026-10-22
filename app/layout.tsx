@@ -10,27 +10,35 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.space";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.space"),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "NewSystem — One System. Every Process. Smarter Business.",
+    default: "NewSystem — Sistem Operasi Manufaktur & Bisnis Terpadu",
     template: "%s | NewSystem",
   },
   description:
-    "NewSystem adalah sistem operasi bisnis & manufaktur terpadu bertenaga AI untuk pabrik modern Indonesia. Menghubungkan ERP, MES, HRIS, CRM, Akuntansi, Dokumen, dan Otomasi.",
+    "NewSystem adalah sistem operasi cloud modern untuk manufaktur Indonesia. Menghubungkan ERP, MES Shop Floor, Akuntansi & HPP Aktual, CRM, Inventori, dan AI Copilot dalam satu kebenaran data.",
   keywords: [
     "NewSystem",
     "ERP Manufaktur Indonesia",
     "MES Shop Floor",
     "Sistem Operasi Pabrik",
-    "HPP Manufaktur",
-    "Software Pabrik",
-    "Manufacturing Operating System",
+    "HPP Manufaktur Aktual",
+    "Software Pabrik Cloud",
+    "Manufacturing Execution System",
+    "Katana MRP Indonesia",
+    "Fulcrum Manufacturing Alternative",
     "AI Copilot Pabrik",
+    "BOM & Work Order Tracking",
   ],
   authors: [{ name: "NewSystem Engineering Team" }],
   creator: "NewSystem",
   publisher: "NewSystem",
+  alternates: {
+    canonical: siteUrl,
+  },
   icons: {
     icon: "/brand/app-icon.png",
     apple: "/brand/app-icon.png",
@@ -38,10 +46,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: "https://newsystem.space",
-    title: "NewSystem — One System. Every Process. Smarter Business.",
+    url: siteUrl,
+    title: "NewSystem — Sistem Operasi Manufaktur & Bisnis Terpadu",
     description:
-      "Sistem operasi bisnis dan manufaktur terpadu bertenaga AI untuk pabrik modern Indonesia. Menghubungkan seluruh proses dari pesanan hingga lantai produksi.",
+      "Tinggalkan ERP kaku dan spreadsheet terpisah. Hubungkan seluruh alur pabrik Anda—dari Sales, MRP, Shop Floor MES, hingga HPP Aktual dalam satu platform real-time.",
     siteName: "NewSystem",
     images: [
       {
@@ -54,14 +62,21 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "NewSystem — One System. Every Process. Smarter Business.",
+    title: "NewSystem — Sistem Operasi Manufaktur & Bisnis Terpadu",
     description:
-      "Sistem operasi bisnis dan manufaktur terpadu bertenaga AI untuk pabrik modern Indonesia.",
+      "Platform ERP & MES cloud modern untuk pabrik di Indonesia. Real-time shop floor control, inventori akurat, dan kalkulasi HPP presisi.",
     images: ["/brand/logo-with-tagline.png"],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
@@ -74,26 +89,50 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "NewSystem",
-    url: "https://newsystem.space",
-    logo: "https://newsystem.space/brand/logo-horizontal-light.png",
+    url: siteUrl,
+    logo: `${siteUrl}/brand/logo-horizontal-light.png`,
     description:
-      "AI-Powered Business & Manufacturing Operating System connecting operations, people, customers, finance, documents, automation, and BI.",
+      "AI-Powered Cloud Manufacturing & Business Operating System connecting ERP, MES, inventory, actual costing, and automation.",
     foundingDate: "2026",
     address: {
       "@type": "PostalAddress",
       addressCountry: "ID",
+    },
+    sameAs: [
+      "https://github.com/slaks37/antigravitynewsyst",
+    ],
+  };
+
+  const jsonLdWebSite = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "NewSystem",
+    url: siteUrl,
+    description: "Sistem Operasi Bisnis dan Manufaktur Terpadu Bertenaga AI",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteUrl}/blog?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
     },
   };
 
   return (
     <html lang="id" className={inter.variable}>
       <head>
+        <link rel="canonical" href={siteUrl} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebSite) }}
+        />
       </head>
-      <body className="min-h-screen flex flex-col font-sans antialiased text-slate-900 bg-slate-50">
+      <body className="min-h-screen flex flex-col font-sans antialiased text-slate-900 bg-slate-50 selection:bg-brand-blue selection:text-white">
         <Navbar />
         <main className="flex-1 pt-20">{children}</main>
         <Footer />

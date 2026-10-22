@@ -1,28 +1,10 @@
 import { NextResponse } from "next/server";
-import { getDatabase } from "@/lib/db";
-import { posts, authors, categories } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { getPublishedPosts } from "@/lib/data/blog-service";
 
 export async function GET() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.space";
-  const db = getDatabase();
 
-  const publishedPosts = await db
-    .select({
-      id: posts.id,
-      title: posts.title,
-      slug: posts.slug,
-      excerpt: posts.excerpt,
-      publishedAt: posts.publishedAt,
-      authorName: authors.name,
-      categoryName: categories.name,
-    })
-    .from(posts)
-    .leftJoin(authors, eq(posts.authorId, authors.id))
-    .leftJoin(categories, eq(posts.primaryCategoryId, categories.id))
-    .where(eq(posts.status, "PUBLISHED"))
-    .orderBy(desc(posts.publishedAt))
-    .limit(50);
+  const { posts: publishedPosts } = await getPublishedPosts({ limit: 50 });
 
   const rssItems = publishedPosts
     .map((post) => {
