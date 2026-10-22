@@ -4,7 +4,7 @@ import { posts, authors, categories } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
 
 export async function GET() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.id";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.space";
   const db = getDatabase();
 
   const publishedPosts = await db

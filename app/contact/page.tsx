@@ -46,7 +46,7 @@ export default function ContactPage() {
                 <Mail className="w-5 h-5 text-brand-blue flex-shrink-0 mt-0.5" />
                 <div>
                   <strong className="block text-slate-900 font-semibold mb-0.5">Email Resmi</strong>
-                  <span className="text-slate-600">contact@newsystem.id</span>
+                  <span className="text-slate-600">contact@newsystem.space</span>
                   <br />
                   <span className="text-slate-500 text-xs">Untuk inquiry bisnis dan demonstrasi alur.</span>
                 </div>

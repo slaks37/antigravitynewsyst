@@ -49,7 +49,7 @@ export default function PrivacyPage() {
 
         <h2 className="text-xl font-bold text-slate-900 mt-6 mb-2">5. Kontak Privasi</h2>
         <p>
-          Jika Anda memiliki pertanyaan mengenai kebijakan privasi atau ingin memperbarui/menghapus data Anda dari sistem kami, silakan hubungi tim kami melalui email <strong>privacy@newsystem.id</strong>.
+          Jika Anda memiliki pertanyaan mengenai kebijakan privasi atau ingin memperbarui/menghapus data Anda dari sistem kami, silakan hubungi tim kami melalui email <strong>privacy@newsystem.space</strong>.
         </p>
       </div>
     </div>

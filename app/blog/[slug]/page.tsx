@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     title: post.seoTitle || post.title,
     description: post.seoDescription || post.excerpt,
     alternates: {
-      canonical: post.canonicalUrl || `https://newsystem.id/blog/${slug}`,
+      canonical: post.canonicalUrl || `https://newsystem.space/blog/${slug}`,
     },
     openGraph: {
       title: post.title,
@@ -210,12 +210,12 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
       name: "NewSystem",
       logo: {
         "@type": "ImageObject",
-        url: "https://newsystem.id/brand/logo-horizontal-light.png",
+        url: "https://newsystem.space/brand/logo-horizontal-light.png",
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://newsystem.id/blog/${post.slug}`,
+      "@id": `https://newsystem.space/blog/${post.slug}`,
     },
   };
 

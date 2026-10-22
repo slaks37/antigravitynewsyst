@@ -6,7 +6,7 @@ import { MODULES_MAP } from "@/lib/data/modules";
 import { SOLUTIONS_MAP } from "@/lib/data/solutions";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.id";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.space";
   const currentDate = new Date();
 
   // Static marketing routes

@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.id"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.space"),
   title: {
     default: "NewSystem — One System. Every Process. Smarter Business.",
     template: "%s | NewSystem",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: "https://newsystem.id",
+    url: "https://newsystem.space",
     title: "NewSystem — One System. Every Process. Smarter Business.",
     description:
       "Sistem operasi bisnis dan manufaktur terpadu bertenaga AI untuk pabrik modern Indonesia. Menghubungkan seluruh proses dari pesanan hingga lantai produksi.",
@@ -74,8 +74,8 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "NewSystem",
-    url: "https://newsystem.id",
-    logo: "https://newsystem.id/brand/logo-horizontal-light.png",
+    url: "https://newsystem.space",
+    logo: "https://newsystem.space/brand/logo-horizontal-light.png",
     description:
       "AI-Powered Business & Manufacturing Operating System connecting operations, people, customers, finance, documents, automation, and BI.",
     foundingDate: "2026",
