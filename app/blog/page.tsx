@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
@@ -14,37 +16,46 @@ import {
   Mail,
   Sparkles,
 } from "lucide-react";
-import {
-  getAllCategories,
-  getPublishedPosts,
-} from "@/lib/data/blog-service";
-import { LeadForm } from "@/components/marketing/LeadForm";
+import { getAllCategories, getPublishedPosts } from "@/lib/data/blog-service";
+import { NewsletterForm } from "@/components/marketing/NewsletterForm";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.space";
 
-export const metadata: Metadata = {
-  title: "Blog & Wawasan Operasional Manufaktur Modern | NewSystem",
-  description:
-    "Pusat pengetahuan manufaktur: panduan praktis ERP, MES shop floor, cara kalkulasi HPP aktual, manajemen inventori lot/batch, dan AI industri dari tim arsitek NewSystem.",
-  alternates: {
-    canonical: `${siteUrl}/blog`,
-  },
-  openGraph: {
-    title: "Blog & Wawasan Operasional Manufaktur Modern | NewSystem",
+export async function generateMetadata({
+  searchParams,
+}: BlogIndexProps): Promise<Metadata> {
+  const { q, cat, page } = await searchParams;
+  const params = new URLSearchParams();
+  if (cat) params.set("cat", cat);
+  const pageNumber = Number(page);
+  if (Number.isSafeInteger(pageNumber) && pageNumber > 1)
+    params.set("page", String(pageNumber));
+  const canonical = `${siteUrl}/blog${params.size ? `?${params}` : ""}`;
+  return {
+    title: "Blog & Wawasan Operasional Manufaktur Modern",
     description:
-      "Panduan mendalam ERP, MES shop floor, dan kalkulasi HPP riil untuk pabrik manufaktur di Indonesia.",
-    url: `${siteUrl}/blog`,
-    type: "website",
-    images: ["/brand/logo-with-tagline.png"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Blog & Wawasan Operasional Manufaktur Modern | NewSystem",
-    description:
-      "Panduan mendalam ERP, MES shop floor, dan kalkulasi HPP riil untuk pabrik modern.",
-    images: ["/brand/logo-with-tagline.png"],
-  },
-};
+      "Pusat pengetahuan manufaktur: panduan praktis ERP, MES shop floor, cara kalkulasi HPP aktual, manajemen inventori lot/batch, dan AI industri dari tim arsitek NewSystem.",
+    robots: q ? { index: false, follow: true } : { index: true, follow: true },
+    alternates: {
+      canonical: canonical,
+    },
+    openGraph: {
+      title: "Blog & Wawasan Operasional Manufaktur Modern | NewSystem",
+      description:
+        "Panduan mendalam ERP, MES shop floor, dan kalkulasi HPP riil untuk pabrik manufaktur di Indonesia.",
+      url: `${siteUrl}/blog`,
+      type: "website",
+      images: ["/brand/logo-with-tagline.png"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Blog & Wawasan Operasional Manufaktur Modern | NewSystem",
+      description:
+        "Panduan mendalam ERP, MES shop floor, dan kalkulasi HPP riil untuk pabrik modern.",
+      images: ["/brand/logo-with-tagline.png"],
+    },
+  };
+}
 
 interface BlogIndexProps {
   searchParams: Promise<{
@@ -56,7 +67,11 @@ interface BlogIndexProps {
 
 export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
   const { q, cat, page } = await searchParams;
-  const currentPage = Number(page) || 1;
+  const requestedPage = Number(page);
+  const currentPage =
+    Number.isSafeInteger(requestedPage) && requestedPage > 0
+      ? requestedPage
+      : 1;
   const pageSize = 9;
   const offset = (currentPage - 1) * pageSize;
 
@@ -81,6 +96,13 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
     : blogPosts;
 
   const totalPages = Math.ceil(totalCount / pageSize);
+  const pageHref = (target: number) => {
+    const params = new URLSearchParams();
+    if (q) params.set("q", q);
+    if (cat) params.set("cat", cat);
+    if (target > 1) params.set("page", String(target));
+    return `/blog${params.size ? `?${params}` : ""}`;
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 space-y-12">
@@ -95,7 +117,9 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
             Wawasan Teknis & Panduan Operasional Pabrik
           </h1>
           <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-            Artikel orisinal, analisis alur ERP & MES, metodologi HPP aktual, dan strategi transisi digital pabrik dari tim arsitek sistem NewSystem.
+            Artikel orisinal, analisis alur ERP & MES, metodologi HPP aktual,
+            dan strategi transisi digital pabrik dari tim arsitek sistem
+            NewSystem.
           </p>
         </div>
 
@@ -174,7 +198,9 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
               <span className="px-3 py-1 rounded-full bg-brand-blue text-white font-bold text-[11px] shadow-sm">
                 ARTIKEL PILIHAN
               </span>
-              <span className="text-cyan-400 font-semibold">{featuredArticle.categoryName || "ERP & MES"}</span>
+              <span className="text-cyan-400 font-semibold">
+                {featuredArticle.categoryName || "ERP & MES"}
+              </span>
               <span className="text-slate-400">•</span>
               <span className="text-slate-400 flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5" />
@@ -198,10 +224,14 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
                   NS
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-white">{featuredArticle.authorName || "Tim NewSystem"}</p>
+                  <p className="text-xs font-bold text-white">
+                    {featuredArticle.authorName || "Tim NewSystem"}
+                  </p>
                   <p className="text-[11px] text-slate-400">
                     {featuredArticle.publishedAt
-                      ? new Date(featuredArticle.publishedAt).toLocaleDateString("id-ID", {
+                      ? new Date(
+                          featuredArticle.publishedAt,
+                        ).toLocaleDateString("id-ID", {
                           day: "numeric",
                           month: "long",
                           year: "numeric",
@@ -230,8 +260,8 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
             {cat
               ? `Artikel Topik: ${allCategories.find((c) => c.slug === cat)?.name || cat}`
               : q
-              ? `Hasil Pencarian: "${q}"`
-              : "Semua Artikel Terbaru"}
+                ? `Hasil Pencarian: "${q}"`
+                : "Semua Artikel Terbaru"}
           </h2>
           <span className="text-xs text-slate-500 font-mono">
             Menampilkan {blogPosts.length} dari {totalCount} artikel
@@ -285,7 +315,9 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
                     <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-brand-blue">
                       NS
                     </div>
-                    <span className="font-medium text-slate-700">{post.authorName || "Tim NewSystem"}</span>
+                    <span className="font-medium text-slate-700">
+                      {post.authorName || "Tim NewSystem"}
+                    </span>
                   </div>
 
                   <Link
@@ -302,6 +334,12 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
         )}
       </section>
 
+      {totalPages > 1 && <nav aria-label="Halaman artikel" className="flex items-center justify-between gap-4 border-t border-slate-200 pt-6 text-sm">
+        {currentPage > 1 ? <Link href={pageHref(currentPage - 1)}>← Sebelumnya</Link> : <span />}
+        <span>Halaman {currentPage} dari {totalPages}</span>
+        {currentPage < totalPages ? <Link href={pageHref(currentPage + 1)}>Berikutnya →</Link> : <span />}
+      </nav>}
+
       {/* Newsletter / Insights Subscription Card (Katana style) */}
       <section className="bg-gradient-to-r from-blue-50 via-indigo-50 to-white rounded-3xl p-8 sm:p-12 border border-blue-100 shadow-sm">
         <div className="max-w-2xl mx-auto text-center space-y-4">
@@ -309,29 +347,15 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexProps) {
             <Mail className="w-6 h-6" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Dapatkan Wawasan Operasional Manufaktur Mingguan
+            Ikuti Wawasan Operasional Manufaktur
           </h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Bergabunglah dengan praktisi manufaktur, manajer pabrik, dan arsitek sistem yang menerima pembaruan berkala tentang kalkulasi HPP, efisiensi shop floor, dan otomatisasi industri.
+            Daftarkan email Anda untuk menerima pembaruan artikel tentang HPP, shop floor, dan pengembangan NewSystem.
           </p>
 
-          <form action="/api/newsletter" method="POST" className="flex flex-col sm:flex-row gap-3 pt-2 max-w-md mx-auto">
-            <input
-              type="email"
-              name="email"
-              required
-              placeholder="Masukkan email kantor Anda..."
-              className="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue bg-white"
-            />
-            <button
-              type="submit"
-              className="px-6 py-2.5 rounded-xl bg-brand-blue text-white font-bold text-sm hover:bg-blue-600 transition-colors shadow-md"
-            >
-              Langganan
-            </button>
-          </form>
+          <NewsletterForm />
           <p className="text-[11px] text-slate-400">
-            Tanpa spam. Anda dapat berhenti berlangganan kapan saja dengan satu klik.
+            Dengan berlangganan, Anda menyetujui komunikasi pembaruan NewSystem sesuai kebijakan privasi kami.
           </p>
         </div>
       </section>

@@ -4,6 +4,7 @@ import { Mail, Phone, MapPin, MessageSquare, Clock } from "lucide-react";
 import { LeadForm } from "@/components/marketing/LeadForm";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/contact" },
   title: "Hubungi Kami — Konsultasi & Pemetaan Proses Pabrik",
   description:
     "Diskusikan tantangan operasional, integrasi alur kerja, dan kebutuhan sistem manufaktur Anda bersama tim konsultan teknis NewSystem.",

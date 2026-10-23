@@ -17,6 +17,7 @@ import { SimulatedBadge } from "@/components/ui/SimulatedBadge";
 import { MaturityBadge } from "@/components/ui/MaturityBadge";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/copilot" },
   title: "AI Copilot — Kecerdasan Perusahaan & Analisis Departemen",
   description:
     "Pelajari arsitektur AI Copilot NewSystem: Company Copilot untuk wawasan lintas departemen dan Module Copilots dengan batasan tata kelola persetujuan ketat.",

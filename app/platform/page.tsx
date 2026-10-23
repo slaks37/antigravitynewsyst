@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/Button";
 import { SimulatedBadge } from "@/components/ui/SimulatedBadge";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/platform" },
   title: "Arsitektur Platform & Unified Operating System",
   description:
     "Pelajari arsitektur terpadu NewSystem: transactional core berprinsip single system of record, dukungan multi-company/multi-plant, dan tata kelola keamanan enterprise.",
@@ -83,19 +84,19 @@ export default function PlatformPage() {
             </div>
             <div className="space-y-4 text-xs font-mono">
               <div className="bg-slate-900/80 p-3 rounded-lg border border-slate-800">
-                <p className="text-slate-400">// CRM Domain</p>
+                <p className="text-slate-400">{"// CRM Domain"}</p>
                 <p className="text-sky-300">Customer → Quotation → Confirmed Sales Order</p>
               </div>
               <div className="bg-slate-900/80 p-3 rounded-lg border border-slate-800">
-                <p className="text-slate-400">// ERP Domain</p>
+                <p className="text-slate-400">{"// ERP Domain"}</p>
                 <p className="text-blue-300">MRP → Purchase Order → Goods Receipt → Stock Ledger</p>
               </div>
               <div className="bg-slate-900/80 p-3 rounded-lg border border-slate-800">
-                <p className="text-slate-400">// MES Domain</p>
+                <p className="text-slate-400">{"// MES Domain"}</p>
                 <p className="text-cyan-300">Work Center → Job Card → Scrap/Rework Log → Operator Hours</p>
               </div>
               <div className="bg-slate-900/80 p-3 rounded-lg border border-slate-800">
-                <p className="text-slate-400">// Accounting Domain</p>
+                <p className="text-slate-400">{"// Accounting Domain"}</p>
                 <p className="text-indigo-300">General Ledger → Double-Entry Journal → Actual HPP Costing</p>
               </div>
             </div>

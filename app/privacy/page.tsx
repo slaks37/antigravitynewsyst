@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/privacy" },
   title: "Kebijakan Privasi",
   description: "Kebijakan Privasi dan Perlindungan Data Industri NewSystem.",
 };

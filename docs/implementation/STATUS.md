@@ -1,6 +1,10 @@
 # NewSystem Official Corporate Website & CMS — Implementation Status
 
-**Status:** Complete & Production Ready  
+**Current website repair status (23 October 2026): TESTED locally; hosted validation and production rollout NOT_STARTED.** See [WEBSITE_REDESIGN.md](WEBSITE_REDESIGN.md) for evidence and limits.
+
+The v1.0 summary below is historical and was not reverified in full during this session.
+
+**Historical v1.0 status:** Complete & Production Ready
 **Date:** October 2026  
 **Version:** 1.0.0  
 **Stack:** Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS, PostgreSQL (via Drizzle ORM + PG / embedded PGlite), Jose (JWT RBAC), Zod, Vitest.

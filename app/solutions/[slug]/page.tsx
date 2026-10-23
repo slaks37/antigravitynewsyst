@@ -30,6 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
+    alternates: { canonical: `/solutions/${slug}` },
     title: `Solusi ${sol.name} — ${sol.tagline}`,
     description: sol.heroDescription,
     openGraph: {

@@ -28,17 +28,13 @@ export const metadata: Metadata = {
     "HPP Manufaktur Aktual",
     "Software Pabrik Cloud",
     "Manufacturing Execution System",
-    "Katana MRP Indonesia",
-    "Fulcrum Manufacturing Alternative",
     "AI Copilot Pabrik",
     "BOM & Work Order Tracking",
   ],
   authors: [{ name: "NewSystem Engineering Team" }],
   creator: "NewSystem",
   publisher: "NewSystem",
-  alternates: {
-    canonical: siteUrl,
-  },
+  alternates: { types: { "application/rss+xml": "/rss.xml" } },
   icons: {
     icon: "/brand/app-icon.png",
     apple: "/brand/app-icon.png",
@@ -98,9 +94,7 @@ export default function RootLayout({
       "@type": "PostalAddress",
       addressCountry: "ID",
     },
-    sameAs: [
-      "https://github.com/slaks37/antigravitynewsyst",
-    ],
+    sameAs: ["https://github.com/slaks37/antigravitynewsyst"],
   };
 
   const jsonLdWebSite = {
@@ -122,7 +116,6 @@ export default function RootLayout({
   return (
     <html lang="id" className={inter.variable}>
       <head>
-        <link rel="canonical" href={siteUrl} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
@@ -133,8 +126,13 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col font-sans antialiased text-slate-900 bg-slate-50 selection:bg-brand-blue selection:text-white">
+        <a href="#main-content" className="skip-link">
+          Langsung ke konten
+        </a>
         <Navbar />
-        <main className="flex-1 pt-20">{children}</main>
+        <main id="main-content" className="flex-1 pt-20">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

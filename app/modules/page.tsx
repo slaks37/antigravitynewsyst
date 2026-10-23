@@ -6,6 +6,7 @@ import { MODULES_MAP } from "@/lib/data/modules";
 import { MaturityBadge } from "@/components/ui/MaturityBadge";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/modules" },
   title: "Modul Lengkap Sistem Operasi Pabrik",
   description:
     "Jelajahi seluruh modul inti NewSystem: ERP, MES, Akuntansi, CRM, HRIS, Quality, Maintenance, Otomasi, Smart Workspace, dan Business Intelligence.",

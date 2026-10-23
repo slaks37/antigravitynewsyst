@@ -4,6 +4,7 @@ import { CheckCircle2, ShieldCheck, Factory, Sparkles, HelpCircle } from "lucide
 import { LeadForm } from "@/components/marketing/LeadForm";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/design-partner" },
   title: "Design Partner Program — Kolaborasi Validasi Pabrik",
   description:
     "Bergabunglah dengan program Design Partner NewSystem. Kami mengundang 3 pabrik percontohan untuk memvalidasi alur operasional ERP, MES, dan HPP aktual bersama tim founding engineers.",

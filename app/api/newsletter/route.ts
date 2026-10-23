@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const subscriberId = `sub-${crypto.randomUUID()}`;
+    const subscriberId = crypto.randomUUID();
 
     await db.insert(newsletterSubscribers).values({
       id: subscriberId,
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
     });
 
     await db.insert(auditLogs).values({
-      id: `audit-${crypto.randomUUID()}`,
+      id: crypto.randomUUID(),
       action: "NEWSLETTER_SUBSCRIBED",
       targetType: "NEWSLETTER",
       targetId: subscriberId,

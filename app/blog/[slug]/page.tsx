@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -30,14 +32,10 @@ interface ArticlePageProps {
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.space";
 
 // Generate static params so all articles are pre-rendered at build time
-export async function generateStaticParams() {
-  const { posts } = await getPublishedPosts();
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-}
 
-export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
 
@@ -48,7 +46,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   const postUrl = `${siteUrl}/blog/${slug}`;
 
   return {
-    title: post.seoTitle || `${post.title} | Blog NewSystem`,
+    title: { absolute: post.seoTitle || `${post.title} | Blog NewSystem` },
     description: post.seoDescription || post.excerpt,
     alternates: {
       canonical: post.canonicalUrl || postUrl,
@@ -100,7 +98,13 @@ function extractHeadings(content: string) {
 // Basic markdown to HTML renderer for standard article blocks
 function renderArticleContent(content: string) {
   // Convert ## Heading 2 into anchorable sections
-  let html = content.replace(/^##\s+(.+)$/gm, (_, title) => {
+  const escaped = content
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+  let html = escaped.replace(/^##\s+(.+)$/gm, (_, title) => {
     const id = title
       .toLowerCase()
       .replace(/[^\w\s-]/g, "")
@@ -121,7 +125,7 @@ function renderArticleContent(content: string) {
   html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
 
   // Convert blockquotes > quote
-  html = html.replace(/^>\s+(.+)$/gm, "<blockquote>$1</blockquote>");
+  html = html.replace(/^&gt;\s+(.+)$/gm, "<blockquote>$1</blockquote>");
 
   // Convert bullet points - item
   html = html.replace(/^-\s+(.+)$/gm, "<li>$1</li>");
@@ -162,7 +166,11 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
   }
 
   const headings = extractHeadings(post.content);
-  const relatedArticles = await getRelatedPosts(post.slug, post.primaryCategoryId, 3);
+  const relatedArticles = await getRelatedPosts(
+    post.slug,
+    post.primaryCategoryId,
+    3,
+  );
 
   const formattedDate = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString("id-ID", {
@@ -232,18 +240,25 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
       {/* Schema Injection */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdArticle) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLdArticle).replace(/</g, "\\u003c"),
+        }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLdBreadcrumb).replace(/</g, "\\u003c"),
+        }}
       />
 
       {/* Header Container */}
       <div className="bg-slate-900 text-white pt-12 pb-16 sm:pb-20 border-b border-slate-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           {/* Breadcrumb Navigation */}
-          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-slate-400">
+          <nav
+            aria-label="Breadcrumb"
+            className="flex items-center gap-2 text-xs text-slate-400"
+          >
             <Link href="/" className="hover:text-white transition-colors">
               Beranda
             </Link>
@@ -280,8 +295,12 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
                 NS
               </div>
               <div>
-                <p className="font-bold text-white text-sm">{post.authorName || "Tim NewSystem"}</p>
-                <p className="text-[11px] text-slate-400">{post.authorRole || "Sistem Arsitektur Pabrik"}</p>
+                <p className="font-bold text-white text-sm">
+                  {post.authorName || "Tim NewSystem"}
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  {post.authorRole || "Sistem Arsitektur Pabrik"}
+                </p>
               </div>
             </div>
 
@@ -307,7 +326,9 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
           <article className="lg:col-span-8 space-y-10">
             <div
               className="prose-newsystem text-base sm:text-lg leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: renderArticleContent(post.content) }}
+              dangerouslySetInnerHTML={{
+                __html: renderArticleContent(post.content),
+              }}
             />
 
             {/* Social Share & Actions */}
@@ -357,7 +378,9 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
                   {post.authorRole || "Product & Architecture Team"}
                 </p>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Praktisi sistem operasional manufaktur, perancangan ERP/MES terdistribusi, dan otomasi industri modern untuk pabrik di Indonesia.
+                  Praktisi sistem operasional manufaktur, perancangan ERP/MES
+                  terdistribusi, dan otomasi industri modern untuk pabrik di
+                  Indonesia.
                 </p>
               </div>
             </div>
@@ -371,7 +394,9 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
                 Ingin Mengeliminasi Selisih Stok dan Mengetahui HPP Riil?
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Tim NewSystem siap mendiskusikan pemetaan alur kerja shop floor dan mendemonstrasikan sistem operasi pabrik yang terintegrasi langsung dengan pembukuan Anda.
+                Tim NewSystem siap mendiskusikan pemetaan alur kerja shop floor
+                dan mendemonstrasikan sistem operasi pabrik yang terintegrasi
+                langsung dengan pembukuan Anda.
               </p>
               <div className="pt-2">
                 <Link
@@ -447,7 +472,9 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
                     <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-brand-blue font-bold text-[10px] border border-blue-100">
                       {art.categoryName || "Manufaktur"}
                     </span>
-                    <span className="text-[11px]">{art.readingTimeMinutes} mnt baca</span>
+                    <span className="text-[11px]">
+                      {art.readingTimeMinutes} mnt baca
+                    </span>
                   </div>
 
                   <h3 className="text-base font-bold text-slate-900 group-hover:text-brand-blue transition-colors line-clamp-2 mb-2 leading-snug">
