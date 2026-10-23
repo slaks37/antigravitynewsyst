@@ -462,7 +462,7 @@ export function InteractiveFeatureShowcase() {
                   <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 text-right">
                     <p className="text-[10px] text-slate-400 mb-1">Direktur Operasional:</p>
                     <p className="text-slate-200 font-medium">
-                      "Mengapa scrap di Lini Packaging melonjak 8% kemarin sore?"
+                      &quot;Mengapa scrap di Lini Packaging melonjak 8% kemarin sore?&quot;
                     </p>
                   </div>
 

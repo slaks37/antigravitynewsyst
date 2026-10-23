@@ -1,8 +1,17 @@
+export const dynamic = "force-dynamic";
+
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
-import { Clock, ChevronRight, BookOpen, ArrowLeft, Mail, User } from "lucide-react";
+import {
+  Clock,
+  ChevronRight,
+  BookOpen,
+  ArrowLeft,
+  Mail,
+  User,
+} from "lucide-react";
 import {
   getAllAuthors,
   getAuthorBySlug,
@@ -15,14 +24,9 @@ interface AuthorPageProps {
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.space";
 
-export async function generateStaticParams() {
-  const authors = await getAllAuthors();
-  return authors.map((author) => ({
-    slug: author.slug,
-  }));
-}
-
-export async function generateMetadata({ params }: AuthorPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: AuthorPageProps): Promise<Metadata> {
   const { slug } = await params;
   const author = await getAuthorBySlug(slug);
 
@@ -34,7 +38,8 @@ export async function generateMetadata({ params }: AuthorPageProps): Promise<Met
 
   return {
     title: `${author.name} — Profil Penulis & Analis | NewSystem`,
-    description: author.bio || `Artikel dan publikasi oleh ${author.name} di NewSystem.`,
+    description:
+      author.bio || `Artikel dan publikasi oleh ${author.name} di NewSystem.`,
     alternates: {
       canonical: authorUrl,
     },

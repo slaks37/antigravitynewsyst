@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { SOLUTIONS_MAP } from "@/lib/data/solutions";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/solutions" },
   title: "Solusi Industri Manufaktur",
   description:
     "Solusi proses bisnis khusus untuk sektor General Manufacturing, Food & Beverage, Garment, Furnitur, Batch, Discrete, dan Hybrid.",

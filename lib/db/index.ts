@@ -44,5 +44,4 @@ export function getDatabase(): DrizzleDb {
   return globalDb;
 }
 
-export const db = getDatabase();
 export { schema };

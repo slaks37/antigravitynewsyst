@@ -1,6 +1,17 @@
 import { NextResponse } from "next/server";
 import { getPublishedPosts } from "@/lib/data/blog-service";
 
+export const dynamic = "force-dynamic";
+
+const escapeXml = (value: string) =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+const cdata = (value: string) => value.replace(/\]\]>/g, "]]]]><![CDATA[>");
+
 export async function GET() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.space";
 
@@ -15,13 +26,13 @@ export async function GET() {
 
       return `
     <item>
-      <title><![CDATA[${post.title}]]></title>
-      <link>${link}</link>
-      <guid isPermaLink="true">${link}</guid>
-      <description><![CDATA[${post.excerpt}]]></description>
+      <title><![CDATA[${cdata(post.title)}]]></title>
+      <link>${escapeXml(link)}</link>
+      <guid isPermaLink="true">${escapeXml(link)}</guid>
+      <description><![CDATA[${cdata(post.excerpt)}]]></description>
       <pubDate>${pubDate}</pubDate>
-      <author><![CDATA[${post.authorName || "Tim NewSystem"}]]></author>
-      <category><![CDATA[${post.categoryName || "Manufaktur"}]]></category>
+      <author><![CDATA[${cdata(post.authorName || "Tim NewSystem")}]]></author>
+      <category><![CDATA[${cdata(post.categoryName || "Manufaktur")}]]></category>
     </item>`;
     })
     .join("");

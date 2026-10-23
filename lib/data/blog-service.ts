@@ -1,6 +1,6 @@
 import { getDatabase } from "@/lib/db";
 import { posts, categories, authors, tags, postTags } from "@/lib/db/schema";
-import { eq, desc, and, or, ilike } from "drizzle-orm";
+import { eq, desc, and, or, ilike, lte, inArray } from "drizzle-orm";
 import {
   FALLBACK_POSTS,
   FALLBACK_CATEGORIES,
@@ -11,6 +11,16 @@ import {
   BlogAuthor,
   BlogTag,
 } from "./blog-data";
+
+// Curated articles support an unconfigured local checkout only. A configured
+// production database is authoritative; an outage must not resurrect withdrawn posts.
+function requireLocalFallback(error: unknown) {
+  if (
+    process.env.DATABASE_URL &&
+    !process.env.DATABASE_URL.includes("user:password@localhost:5432")
+  )
+    throw error;
+}
 
 /**
  * Get all active categories (DB with safe fallback)
@@ -33,7 +43,7 @@ export async function getAllCategories(): Promise<BlogCategory[]> {
       .where(eq(categories.active, true))
       .orderBy(categories.displayOrder);
 
-    if (result && result.length > 0) {
+    if (result) {
       return result.map((r) => ({
         id: r.id,
         name: r.name,
@@ -46,6 +56,7 @@ export async function getAllCategories(): Promise<BlogCategory[]> {
       }));
     }
   } catch (err) {
+    requireLocalFallback(err);
     // Graceful fallback if database is unseeded or table missing
   }
 
@@ -55,7 +66,9 @@ export async function getAllCategories(): Promise<BlogCategory[]> {
 /**
  * Get single category by slug
  */
-export async function getCategoryBySlug(slug: string): Promise<BlogCategory | null> {
+export async function getCategoryBySlug(
+  slug: string,
+): Promise<BlogCategory | null> {
   const allCats = await getAllCategories();
   return allCats.find((c) => c.slug === slug) || null;
 }
@@ -71,7 +84,7 @@ export async function getAllAuthors(): Promise<BlogAuthor[]> {
       .from(authors)
       .where(eq(authors.active, true));
 
-    if (result && result.length > 0) {
+    if (result) {
       return result.map((a) => ({
         id: a.id,
         name: a.name,
@@ -84,6 +97,7 @@ export async function getAllAuthors(): Promise<BlogAuthor[]> {
       }));
     }
   } catch (err) {
+    requireLocalFallback(err);
     // Graceful fallback
   }
 
@@ -93,7 +107,9 @@ export async function getAllAuthors(): Promise<BlogAuthor[]> {
 /**
  * Get author by slug
  */
-export async function getAuthorBySlug(slug: string): Promise<BlogAuthor | null> {
+export async function getAuthorBySlug(
+  slug: string,
+): Promise<BlogAuthor | null> {
   const allAuthors = await getAllAuthors();
   return allAuthors.find((a) => a.slug === slug) || null;
 }
@@ -105,7 +121,7 @@ export async function getAllTags(): Promise<BlogTag[]> {
   try {
     const db = getDatabase();
     const result = await db.select().from(tags);
-    if (result && result.length > 0) {
+    if (result) {
       return result.map((t) => ({
         id: t.id,
         name: t.name,
@@ -113,6 +129,7 @@ export async function getAllTags(): Promise<BlogTag[]> {
       }));
     }
   } catch (err) {
+    requireLocalFallback(err);
     // Fallback
   }
 
@@ -138,14 +155,38 @@ export async function getPublishedPosts(options?: {
   limit?: number;
   offset?: number;
 }): Promise<{ posts: BlogPost[]; totalCount: number }> {
-  const { categorySlug, tagSlug, authorSlug, searchQuery, limit, offset = 0 } = options || {};
+  const {
+    categorySlug,
+    tagSlug,
+    authorSlug,
+    searchQuery,
+    limit,
+    offset = 0,
+  } = options || {};
 
   try {
     const db = getDatabase();
-    const conditions = [eq(posts.status, "PUBLISHED")];
+    const conditions = [
+      eq(posts.status, "PUBLISHED"),
+      lte(posts.publishedAt, new Date()),
+    ];
+
+    if (tagSlug) {
+      conditions.push(
+        inArray(
+          posts.id,
+          db
+            .select({ id: postTags.postId })
+            .from(postTags)
+            .innerJoin(tags, eq(postTags.tagId, tags.id))
+            .where(eq(tags.slug, tagSlug)),
+        ),
+      );
+    }
 
     if (categorySlug) {
       const cat = await getCategoryBySlug(categorySlug);
+      if (!cat) return { posts: [], totalCount: 0 };
       if (cat) {
         conditions.push(eq(posts.primaryCategoryId, cat.id));
       }
@@ -153,6 +194,7 @@ export async function getPublishedPosts(options?: {
 
     if (authorSlug) {
       const author = await getAuthorBySlug(authorSlug);
+      if (!author) return { posts: [], totalCount: 0 };
       if (author) {
         conditions.push(eq(posts.authorId, author.id));
       }
@@ -164,8 +206,8 @@ export async function getPublishedPosts(options?: {
         or(
           ilike(posts.title, term),
           ilike(posts.excerpt, term),
-          ilike(posts.content, term)
-        )!
+          ilike(posts.content, term),
+        )!,
       );
     }
 
@@ -189,6 +231,7 @@ export async function getPublishedPosts(options?: {
         featured: posts.featured,
         status: posts.status,
         publishedAt: posts.publishedAt,
+        updatedAt: posts.updatedAt,
         readingTimeMinutes: posts.readingTimeMinutes,
         seoTitle: posts.seoTitle,
         seoDescription: posts.seoDescription,
@@ -199,11 +242,11 @@ export async function getPublishedPosts(options?: {
       .leftJoin(categories, eq(posts.primaryCategoryId, categories.id))
       .leftJoin(authors, eq(posts.authorId, authors.id))
       .where(and(...conditions))
-      .orderBy(desc(posts.publishedAt));
+      .orderBy(desc(posts.publishedAt), desc(posts.id));
 
     const dbResults = await dbQuery;
 
-    if (dbResults && dbResults.length > 0) {
+    if (dbResults) {
       let filtered = dbResults.map((p) => ({
         id: p.id,
         title: p.title,
@@ -222,7 +265,12 @@ export async function getPublishedPosts(options?: {
         authorAvatar: p.authorAvatar || undefined,
         featured: p.featured,
         status: (p.status as BlogPost["status"]) || "PUBLISHED",
-        publishedAt: p.publishedAt ? new Date(p.publishedAt).toISOString() : new Date().toISOString(),
+        publishedAt: p.publishedAt
+          ? new Date(p.publishedAt).toISOString()
+          : new Date().toISOString(),
+        updatedAt: p.updatedAt
+          ? new Date(p.updatedAt).toISOString()
+          : undefined,
         readingTimeMinutes: p.readingTimeMinutes || 5,
         seoTitle: p.seoTitle || undefined,
         seoDescription: p.seoDescription || undefined,
@@ -237,11 +285,14 @@ export async function getPublishedPosts(options?: {
       return { posts: filtered, totalCount };
     }
   } catch (err) {
+    requireLocalFallback(err);
     // Database query failed or table does not exist
   }
 
   // Fallback to in-memory curated data
-  let filtered = [...FALLBACK_POSTS];
+  let filtered = FALLBACK_POSTS.filter(
+    (p) => p.status === "PUBLISHED" && new Date(p.publishedAt) <= new Date(),
+  ).sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 
   if (categorySlug) {
     filtered = filtered.filter((p) => p.categorySlug === categorySlug);
@@ -261,7 +312,7 @@ export async function getPublishedPosts(options?: {
       (p) =>
         p.title.toLowerCase().includes(q) ||
         p.excerpt.toLowerCase().includes(q) ||
-        p.content.toLowerCase().includes(q)
+        p.content.toLowerCase().includes(q),
     );
   }
 
@@ -299,6 +350,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
         featured: posts.featured,
         status: posts.status,
         publishedAt: posts.publishedAt,
+        updatedAt: posts.updatedAt,
         readingTimeMinutes: posts.readingTimeMinutes,
         seoTitle: posts.seoTitle,
         seoDescription: posts.seoDescription,
@@ -308,7 +360,13 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
       .from(posts)
       .leftJoin(categories, eq(posts.primaryCategoryId, categories.id))
       .leftJoin(authors, eq(posts.authorId, authors.id))
-      .where(and(eq(posts.slug, slug), eq(posts.status, "PUBLISHED")))
+      .where(
+        and(
+          eq(posts.slug, slug),
+          eq(posts.status, "PUBLISHED"),
+          lte(posts.publishedAt, new Date()),
+        ),
+      )
       .limit(1);
 
     if (dbPost) {
@@ -330,7 +388,12 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
         authorAvatar: dbPost.authorAvatar || undefined,
         featured: dbPost.featured,
         status: "PUBLISHED",
-        publishedAt: dbPost.publishedAt ? new Date(dbPost.publishedAt).toISOString() : new Date().toISOString(),
+        publishedAt: dbPost.publishedAt
+          ? new Date(dbPost.publishedAt).toISOString()
+          : new Date().toISOString(),
+        updatedAt: dbPost.updatedAt
+          ? new Date(dbPost.updatedAt).toISOString()
+          : undefined,
         readingTimeMinutes: dbPost.readingTimeMinutes || 5,
         seoTitle: dbPost.seoTitle || undefined,
         seoDescription: dbPost.seoDescription || undefined,
@@ -338,11 +401,17 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
         ogImage: dbPost.ogImage || undefined,
       };
     }
+    return null;
   } catch (err) {
-    // Fallback
+    requireLocalFallback(err);
   }
 
-  const fallback = FALLBACK_POSTS.find((p) => p.slug === slug);
+  const fallback = FALLBACK_POSTS.find(
+    (p) =>
+      p.slug === slug &&
+      p.status === "PUBLISHED" &&
+      new Date(p.publishedAt) <= new Date(),
+  );
   return fallback || null;
 }
 
@@ -357,7 +426,9 @@ export async function getFeaturedPost(): Promise<BlogPost | null> {
 /**
  * Get latest articles (e.g. for homepage)
  */
-export async function getLatestArticles(limit: number = 3): Promise<BlogPost[]> {
+export async function getLatestArticles(
+  limit: number = 3,
+): Promise<BlogPost[]> {
   const { posts: allPosts } = await getPublishedPosts({ limit });
   return allPosts;
 }
@@ -368,17 +439,21 @@ export async function getLatestArticles(limit: number = 3): Promise<BlogPost[]> 
 export async function getRelatedPosts(
   currentSlug: string,
   categoryId?: string,
-  limit: number = 3
+  limit: number = 3,
 ): Promise<BlogPost[]> {
   const { posts: allPosts } = await getPublishedPosts({ limit: 10 });
   const otherPosts = allPosts.filter((p) => p.slug !== currentSlug);
 
   if (categoryId) {
-    const sameCategory = otherPosts.filter((p) => p.primaryCategoryId === categoryId);
+    const sameCategory = otherPosts.filter(
+      (p) => p.primaryCategoryId === categoryId,
+    );
     if (sameCategory.length >= limit) {
       return sameCategory.slice(0, limit);
     }
-    const remainder = otherPosts.filter((p) => p.primaryCategoryId !== categoryId);
+    const remainder = otherPosts.filter(
+      (p) => p.primaryCategoryId !== categoryId,
+    );
     return [...sameCategory, ...remainder].slice(0, limit);
   }
 

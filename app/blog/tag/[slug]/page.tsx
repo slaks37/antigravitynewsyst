@@ -1,8 +1,16 @@
+export const dynamic = "force-dynamic";
+
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
-import { Clock, ChevronRight, BookOpen, ArrowLeft, Tag as TagIcon } from "lucide-react";
+import {
+  Clock,
+  ChevronRight,
+  BookOpen,
+  ArrowLeft,
+  Tag as TagIcon,
+} from "lucide-react";
 import {
   getAllTags,
   getTagBySlug,
@@ -15,14 +23,9 @@ interface TagPageProps {
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.space";
 
-export async function generateStaticParams() {
-  const tags = await getAllTags();
-  return tags.map((t) => ({
-    slug: t.slug,
-  }));
-}
-
-export async function generateMetadata({ params }: TagPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: TagPageProps): Promise<Metadata> {
   const { slug } = await params;
   const tag = await getTagBySlug(slug);
 
@@ -85,7 +88,8 @@ export default async function BlogTagPage({ params }: TagPageProps) {
         </h1>
 
         <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-          Koleksi artikel dan wawasan operasional yang berkaitan dengan topik {tag.name}.
+          Koleksi artikel dan wawasan operasional yang berkaitan dengan topik{" "}
+          {tag.name}.
         </p>
       </div>
 
@@ -126,7 +130,9 @@ export default async function BlogTagPage({ params }: TagPageProps) {
                 </div>
 
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                  <span className="text-[11px]">{post.authorName || "Tim NewSystem"}</span>
+                  <span className="text-[11px]">
+                    {post.authorName || "Tim NewSystem"}
+                  </span>
                   <Link
                     href={`/blog/${post.slug}`}
                     className="font-bold text-brand-blue hover:text-blue-700 flex items-center gap-1"

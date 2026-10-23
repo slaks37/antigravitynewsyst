@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/terms" },
   title: "Syarat & Ketentuan",
   description: "Syarat dan Ketentuan Penggunaan Situs Web Resmi NewSystem.",
 };

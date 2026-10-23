@@ -5,6 +5,7 @@ import { ShieldCheck, Target, Compass, Award, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/about" },
   title: "Tentang NewSystem — Visi, Misi & Prinsip Rekayasa",
   description:
     "Mengenal NewSystem: platform sistem operasi cerdas yang didedikasikan untuk menghubungkan seluruh ekosistem bisnis dan manufaktur pabrik modern di Indonesia.",

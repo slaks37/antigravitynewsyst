@@ -36,6 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
+    alternates: { canonical: `/modules/${slug}` },
     title: `${mod.name} — ${mod.fullName}`,
     description: mod.heroProblem,
     openGraph: {

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -15,14 +17,9 @@ interface CategoryPageProps {
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://newsystem.space";
 
-export async function generateStaticParams() {
-  const categories = await getAllCategories();
-  return categories.map((cat) => ({
-    slug: cat.slug,
-  }));
-}
-
-export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: CategoryPageProps): Promise<Metadata> {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);
 
@@ -33,13 +30,16 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   const catUrl = `${siteUrl}/blog/category/${slug}`;
 
   return {
-    title: category.seoTitle || `${category.name} — Wawasan Manufaktur | NewSystem`,
+    title:
+      category.seoTitle || `${category.name} — Wawasan Manufaktur | NewSystem`,
     description: category.seoDescription || category.description,
     alternates: {
       canonical: catUrl,
     },
     openGraph: {
-      title: category.seoTitle || `${category.name} — Wawasan Manufaktur | NewSystem`,
+      title:
+        category.seoTitle ||
+        `${category.name} — Wawasan Manufaktur | NewSystem`,
       description: category.seoDescription || category.description,
       url: catUrl,
       type: "website",
@@ -89,7 +89,8 @@ export default async function BlogCategoryPage({ params }: CategoryPageProps) {
             Belum Ada Artikel dalam Kategori Ini
           </h2>
           <p className="text-xs text-slate-500">
-            Artikel baru untuk topik ini sedang dalam tahap peninjauan editorial.
+            Artikel baru untuk topik ini sedang dalam tahap peninjauan
+            editorial.
           </p>
           <div className="pt-2">
             <Link
@@ -128,7 +129,9 @@ export default async function BlogCategoryPage({ params }: CategoryPageProps) {
               </div>
 
               <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                <span className="font-medium text-slate-700">{post.authorName || "Tim NewSystem"}</span>
+                <span className="font-medium text-slate-700">
+                  {post.authorName || "Tim NewSystem"}
+                </span>
                 <Link
                   href={`/blog/${post.slug}`}
                   className="font-bold text-brand-blue hover:text-blue-700 flex items-center gap-1"
