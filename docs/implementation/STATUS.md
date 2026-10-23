@@ -1,6 +1,6 @@
 # NewSystem Official Corporate Website & CMS — Implementation Status
 
-**Current website repair status (23 October 2026): TESTED locally; hosted validation and production rollout NOT_STARTED.** See [WEBSITE_REDESIGN.md](WEBSITE_REDESIGN.md) for evidence and limits.
+**Current website repair status (23 October 2026): TESTED locally; Preview public HTTP smoke VERIFIED; production rollout NOT_STARTED.** See [WEBSITE_REDESIGN.md](WEBSITE_REDESIGN.md) for evidence and limits.
 
 The v1.0 summary below is historical and was not reverified in full during this session.
 
