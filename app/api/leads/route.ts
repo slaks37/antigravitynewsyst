@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import { getDatabase } from "@/lib/db";
 import { leads, auditLogs } from "@/lib/db/schema";
 import { sendNotificationEmail } from "@/lib/email/provider";
@@ -20,7 +19,7 @@ export async function POST(req: NextRequest) {
     }
 
     const db = getDatabase();
-    const leadId = `lead-${crypto.randomUUID()}`;
+    const leadId = crypto.randomUUID();
 
     // 1. Insert into PostgreSQL
     await db.insert(leads).values({
@@ -45,7 +44,7 @@ export async function POST(req: NextRequest) {
 
     // 2. Audit log
     await db.insert(auditLogs).values({
-      id: `audit-${crypto.randomUUID()}`,
+      id: crypto.randomUUID(),
       action: "LEAD_CREATED",
       targetType: "LEAD",
       targetId: leadId,

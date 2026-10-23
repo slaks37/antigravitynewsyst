@@ -10,6 +10,7 @@ const links = [
   { href: "/platform", name: "Platform" },
   { href: "/modules", name: "Modul" },
   { href: "/solutions", name: "Solusi industri" },
+  { href: "/services", name: "Services" },
   { href: "/copilot", name: "AI Copilot" },
   { href: "/blog", name: "Blog" },
 ];
@@ -51,7 +52,7 @@ export function Navbar() {
           ))}
         </nav>
         <Link href="/contact" className="nav-cta">
-          Diskusikan pabrik Anda
+          Diskusikan perusahaan Anda
           <ArrowUpRight size={16} />
         </Link>
         <button
@@ -83,7 +84,7 @@ export function Navbar() {
             </Link>
           ))}
           <Link href="/contact" onClick={() => setOpen(false)}>
-            Diskusikan pabrik Anda
+            Diskusikan perusahaan Anda
             <ArrowUpRight size={16} />
           </Link>
         </nav>

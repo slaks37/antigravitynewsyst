@@ -3,18 +3,18 @@ import { test, expect } from "@playwright/test";
 test.describe("NewSystem Corporate Website E2E Journeys", () => {
   test("Homepage loads properly with brand tagline and verified maturity badges", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveTitle(/NewSystem — Software ERP & MES Manufaktur Indonesia/);
+    await expect(page).toHaveTitle(/NewSystem — Your Entire Business. Working as One./);
 
     // Headline check
     const heroHeading = page.locator("h1");
-    await expect(heroHeading).toContainText("Setiap proses.");
+    await expect(heroHeading).toContainText("Seluruh perusahaan.");
     await expect(page.locator("body")).toContainText("One System. Every Process. Smarter Business.");
 
     // Truthful maturity disclaimer banner
-    await expect(page.locator("body")).toContainText("Transparansi Kematangan Produk");
+    await expect(page.locator("body")).toContainText("SIMULASI");
 
     // Primary CTA button presence
-    const discussBtn = page.getByRole("link", { name: /Diskusikan Pabrik Anda/i }).first();
+    const discussBtn = page.getByRole("link", { name: /Diskusikan perusahaan Anda/i }).first();
     await expect(discussBtn).toBeVisible();
   });
 
@@ -31,7 +31,7 @@ test.describe("NewSystem Corporate Website E2E Journeys", () => {
 
     await page.goto("/solutions");
     await expect(page.locator("h1")).toContainText("Solusi Industri yang Menjawab Logika Nyata Pabrik");
-    await expect(page.locator("body")).toContainText("Food & Beverage Manufacturing");
+    await expect(page.locator("body")).toContainText("Food & Beverage (F&B)");
   });
 
   test("Blog page lists published articles with category navigation", async ({ page }) => {
@@ -52,7 +52,7 @@ test.describe("NewSystem Corporate Website E2E Journeys", () => {
     await expect(nameInput).toBeVisible();
   });
 
-  test("Admin CMS login page renders 1-click test credentials", async ({ page }) => {
+  test("Admin CMS login page renders role options", async ({ page }) => {
     await page.goto("/admin/login");
     await expect(page.locator("h1")).toContainText("Portal CMS & Editorial");
 
