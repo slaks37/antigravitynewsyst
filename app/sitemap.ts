@@ -20,6 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${siteUrl}/copilot`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${siteUrl}/modules`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${siteUrl}/solutions`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${siteUrl}/services`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/blog`, changeFrequency: "daily", priority: 0.9 },
     {
       url: `${siteUrl}/design-partner`,

@@ -1,6 +1,6 @@
 # NewSystem Official Corporate Website & CMS — Implementation Status
 
-**Current website repair status (23 October 2026): TESTED locally; Preview public HTTP smoke VERIFIED; production rollout NOT_STARTED.** See [WEBSITE_REDESIGN.md](WEBSITE_REDESIGN.md) for evidence and limits.
+**Current enterprise revamp status (23 October 2026): TESTED locally; production rollout NOT_STARTED.** Branch `feat/enterprise-scroll-storytelling`. See [ENTERPRISE_REVAMP.md](ENTERPRISE_REVAMP.md) for audit, 12-scene implementation and actual test evidence. Previous website repair is already on production main (`46d4c43`); this new enterprise storytelling revamp is a separate approval-gated change. Persistent production database/CMS/lead writes remain unverified.
 
 The v1.0 summary below is historical and was not reverified in full during this session.
 

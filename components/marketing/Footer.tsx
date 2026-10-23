@@ -180,6 +180,7 @@ export function Footer() {
                   Design Partner Program
                 </Link>
               </li>
+              <li><Link href="/services" className="hover:text-white transition-colors">Pendekatan Layanan</Link></li>
               <li>
                 <Link href="/rss.xml" className="hover:text-white transition-colors">
                   RSS Feed
