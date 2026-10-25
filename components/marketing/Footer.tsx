@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, ArrowUpRight } from "lucide-react";
+import { ShieldCheck, ArrowUpRight, Mail, Phone, MessageCircle } from "lucide-react";
 
 export function Footer() {
   return (
@@ -50,6 +50,35 @@ export function Footer() {
             <div className="text-xs text-slate-500 space-y-1">
               <p>Fokus Segmen: General, F&B, Garment, Furnitur & Assembly</p>
               <p>Model Operasional: MTO, MTS, Batch, Discrete, Hybrid</p>
+            </div>
+
+            <div className="mt-6 pt-5 border-t border-slate-800 text-xs text-slate-400 space-y-2.5">
+              <p className="font-semibold text-slate-200">Kontak & Konsultasi Langsung:</p>
+              <div className="space-y-2">
+                <a
+                  href="mailto:stefen@newsystem.space"
+                  className="flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <Mail className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
+                  <span>stefen@newsystem.space</span>
+                </a>
+                <a
+                  href="https://wa.me/6282296756759?text=Halo%20Stefen%2C%20saya%20tertarik%20dengan%20NewSystem"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <MessageCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Stefen: 0822-9675-6759 (WhatsApp)</span>
+                </a>
+                <a
+                  href="tel:+6282296756759"
+                  className="flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <Phone className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
+                  <span>Telepon: 0822-9675-6759</span>
+                </a>
+              </div>
             </div>
           </div>
 
@@ -158,6 +187,11 @@ export function Footer() {
               <li>
                 <Link href="/blog" className="hover:text-white transition-colors font-semibold text-brand-cyan">
                   Pusat Wawasan Pabrik
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors font-medium text-slate-200">
+                  Hubungi Kami & Konsultasi
                 </Link>
               </li>
               <li>

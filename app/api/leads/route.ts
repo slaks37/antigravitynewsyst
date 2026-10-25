@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
 
     // 3. Notify team via email provider adapter
     await sendNotificationEmail({
-      to: "sales@newsystem.id",
+      to: process.env.NOTIFICATION_EMAIL || "stefen@newsystem.space",
       subject: `[Lead Baru] ${parsed.data.formType}: ${parsed.data.company}`,
       text: `Permintaan baru dari ${parsed.data.fullName} (${parsed.data.company}) - Industri: ${parsed.data.industry}, Email: ${parsed.data.businessEmail}, Telepon: ${parsed.data.phoneNumber || "-"}`,
     });

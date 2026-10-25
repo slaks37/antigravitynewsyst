@@ -20,7 +20,7 @@ export interface SendEmailResult {
 
 export async function sendNotificationEmail(message: EmailMessage): Promise<SendEmailResult> {
   const provider = process.env.EMAIL_PROVIDER || "console";
-  const defaultFrom = process.env.EMAIL_FROM || "notifications@newsystem.id";
+  const defaultFrom = process.env.EMAIL_FROM || "notifications@newsystem.space";
   const from = message.from || defaultFrom;
 
   // 1. In development / testing or when unconfigured, safely log without claiming external delivery

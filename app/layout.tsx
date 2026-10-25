@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/marketing/Navbar";
 import { Footer } from "@/components/marketing/Footer";
+import { QuickReachoutWidget } from "@/components/marketing/QuickReachoutWidget";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -134,6 +135,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <QuickReachoutWidget />
       </body>
     </html>
   );
