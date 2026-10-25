@@ -70,6 +70,16 @@ async function runSeed() {
   console.log("🌱 Seeding Authors...");
   const initialAuthors = [
     {
+      id: "auth-stefen",
+      name: "Stefen",
+      slug: "stefen",
+      email: "stefen@newsystem.space",
+      role: "Founding Team & Solution Architect",
+      bio: "Membantu transformasi operasional pabrik, integrasi ERP/MES terpadu, dan otomatisasi alur kerja modern di Indonesia.",
+      avatarUrl: "/brand/app-icon.png",
+      active: true,
+    },
+    {
       id: "auth-founding",
       name: "Tim Engineering & Produk NewSystem",
       slug: "tim-newsystem",

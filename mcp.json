@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "newsystem-blog": {
+      "command": "node",
+      "args": ["scripts/blog-mcp-server.mjs"],
+      "env": {
+        "BLOG_API_URL": "https://cms.newsystem.space",
+        "BLOG_AUTOMATION_API_KEY": "newsystem_dev_automation_key"
+      }
+    }
+  }
+}

@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "db:push": "drizzle-kit push",
-    "db:seed": "npx tsx scripts/seed.ts"
+    "db:seed": "npx tsx scripts/seed.ts",
+    "mcp:blog": "node scripts/blog-mcp-server.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.2.14",

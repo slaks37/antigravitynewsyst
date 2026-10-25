@@ -69,8 +69,8 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             </div>
           </Link>
           <div className="flex items-center gap-2 mt-2">
-            <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-slate-800 text-brand-cyan border border-slate-700">
-              CMS Admin v1.0
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-brand-cyan border border-slate-700">
+              cms.newsystem.space
             </span>
             <Link
               href="/"
